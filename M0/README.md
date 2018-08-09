@@ -4,15 +4,15 @@ eGreenhouse is a lightweight and low-cost greenhouse sensor package integrated w
 //Must run all .ino files with loom_translator.h alongside in the same folder// 
 
 ### eGreenhouse has 3 main components: 
-  1. The sensor package
-    /n - Adafruit Feather M0 Adalogger + DS3231 RTC + Nordic nRF radio shield
-    - K30 CO2 sensor
-    - TSL2561 luminosity sensor
-    - SHT31-D temperature + relative humidity sensor
+  1. The sensor package\
+    - Adafruit Feather M0 Adalogger + DS3231 RTC + Nordic nRF radio shield\
+    - K30 CO2 sensor\
+    - TSL2561 luminosity sensor\
+    - SHT31-D temperature + relative humidity sensor\
     - SDS-011 particle sensor (dust/pollen)
   
   2. The HyperRail hub (+ optional Ethernet/Wifi transmission)
-    - Adafruit Feather M0 Basic + nRF shield + Ethernet FeatherWing
+    - Adafruit Feather M0 Basic + nRF shield + Ethernet FeatherWing\
     - Optional: make this hub an intermediate node - send data to a third nRF receiver and upload via Ethernet from there. 
   
   3. The graphical user interface (GUI) which runs in the program, Processing. 
