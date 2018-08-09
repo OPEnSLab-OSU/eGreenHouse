@@ -23,4 +23,4 @@ eGreenhouse is a lightweight and low-cost greenhouse sensor package integrated w
 Upload eGreenhouseSensorsFinal.ino to the sensor package first. Once running, it will wait to receive a command from the HyperRail hub. Next, upload HyperSense_nRF_hub to the HyperRail hub and HyperSenseEthernetNode to the Ethernet hub. Finally, open the Processing GUI and specify the desired sampling locations and intervals. Click 'Travel' and the whole sequence will begin. 
 
 More details + wiring coming soon! 
-Email larsonla@oregonstate.edu with questions. 
+ 
