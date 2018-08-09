@@ -5,7 +5,7 @@ eGreenhouse is a lightweight and low-cost greenhouse sensor package integrated w
 
 ### eGreenhouse has 3 main components: 
   1. The sensor package
-    - Adafruit Feather M0 Adalogger + DS3231 RTC + Nordic nRF radio shield
+    /n - Adafruit Feather M0 Adalogger + DS3231 RTC + Nordic nRF radio shield
     - K30 CO2 sensor
     - TSL2561 luminosity sensor
     - SHT31-D temperature + relative humidity sensor
