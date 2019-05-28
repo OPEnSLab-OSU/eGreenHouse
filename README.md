@@ -6,6 +6,7 @@ eGreenhouse is a lightweight and low-cost greenhouse sensor package integrated w
 
 * Overview
 * Setup and Installation
+ * Dependencies
 * Contributing
   * Git Workflow
 
@@ -34,6 +35,9 @@ We recommend using our custom PCB to to simplify wiring.
 1. Install eGreenhouseSensorsLoRa.ino onto the eGreenhouse sensor package.
 2. Install ethernetHubLora.ino onto the Ethernet hub.
 3. Install hyperSenseLora.ino onto the HyperRail hub.
+
+### Dependencies
+Dependencies are in the dependencies folder. (Update with way to install these through the Arduino package manager.)
 
 ## Contributing
 
