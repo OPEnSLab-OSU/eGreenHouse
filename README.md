@@ -9,6 +9,7 @@ eGreenhouse is a lightweight and low-cost greenhouse sensor package integrated w
  * Dependencies
 * Contributing
   * Git Workflow
+* Known issues and updates
 
 ## Overview
 
@@ -56,3 +57,10 @@ You will need the following libraries and versions to compile code for the eGree
 ### Git Workflow
 
 Add a detailed git workflow here.
+
+## Issues and Updates
+These are known issues related to the software and hardware of eGreenhouse that should be fixed in the future.
+
+* OSC can cause memory issues
+* Single threaded arduinos cannot recieve updated instructions easily
+* 
