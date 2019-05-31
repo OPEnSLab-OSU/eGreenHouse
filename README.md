@@ -15,7 +15,7 @@ eGreenhouse is a lightweight and low-cost greenhouse sensor package integrated w
 eGreenhouse has 3 main components:
 
 * The eGreenhouse sensor package
-  * Adafruit Feather M0 Lora + Adalogger?
+  * Adafruit Feather M0 Lora + Adalogger + RTC
   * K30 CO2 sensor
   * TSL2561 luminosity sensor
   * SHT31-D temperature + relative humidity sensor
@@ -37,7 +37,19 @@ We recommend using our custom PCB to to simplify wiring.
 3. Install hyperSenseLora.ino onto the HyperRail hub.
 
 ### Dependencies
-Dependencies are in the dependencies folder. (Update with way to install these through the Arduino package manager.)
+You will need the following libraries and versions to compile code for the eGreenhouse and HyperRail hub (dependencies for Ethernet Hub coming soon). The new versions of these libraries need to be tested.
+
+* Adafruit SHT31 Library 1.0
+* Adafruit TSL2561 1.0.2
+* Adafruit Unified Sensor 1.0.2
+* Adafruit_ZeroDMA 1.0.4
+* [OSC](https://github.com/CNMAT/OSC) 1.3.5
+* [RadioHead](http://www.airspayce.com/mikem/arduino/RadioHead/)
+* RTClib 1.2.0
+* SD 1.2.3 - Built in
+* SDS011-select-serial-master 0.0.6
+* SPI 1.0
+* Wire version 1.0
 
 ## Contributing
 
