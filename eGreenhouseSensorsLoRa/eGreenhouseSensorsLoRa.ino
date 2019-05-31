@@ -165,7 +165,6 @@ void loop() {
   //
   //    }
 
-
   lora_receive_bundle(&bndl);
 
   if ( (bndl.size() > 0) && (bndl.size() < 1000) ) {
