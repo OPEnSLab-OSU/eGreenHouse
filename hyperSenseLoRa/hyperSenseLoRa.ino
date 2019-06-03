@@ -16,7 +16,7 @@
 
 
 //Import libraries
-#include <SPI.h>
+
 #include <OSCBundle.h>
 
 #define STR_HELPER(x) #x

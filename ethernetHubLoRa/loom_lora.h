@@ -31,7 +31,7 @@ const uint16_t LORA_HUB_ADDRESS = 00;
 
 RH_RF95 rf95(RFM95_CS, RFM95_INT);
 
-RHReliableDatagram manager(rf95, LORA_NODE_ADDRESS);
+RHReliableDatagram manager(rf95, LORA_NODE_2_ADDRESS);
 
 int lora_last_rssi;
 
@@ -220,8 +220,3 @@ bool lora_send_bundle(OSCBundle *bndl)
 
   // Use 'recvfromAckTimeout' from reliable client example for ack confirmation
 }
-
-
-
-
-

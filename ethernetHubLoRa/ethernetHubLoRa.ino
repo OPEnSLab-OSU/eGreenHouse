@@ -52,8 +52,6 @@
 #define nrf_subnet_scope      4 // 1 for subnet, 2 for global/family, 3 for global only (not recommended), 4 for any message. (use 2 if unsure)
 #define FAMILY "/LOOM"
 
-void setup_lora(RH_RF95 *rf95, RHReliableDatagram *manager);
-
 // Address of the other node in Octal format
 const unsigned long interval = 5000; //ms  // How often to send 'hello world to the other unit
 unsigned long last_sent;             // When did we last send?
@@ -153,7 +151,7 @@ bool setup_ethernet()
 {
   Serial.println("Setting up ethernet");
 
-  bool is_setup;
+  bool is_setup = false;
   if (Ethernet.begin(mac) == 0) {
     Serial.println("Failed to configure Ethernet using DHCP");
     // try to congifure using IP address instead of DHCP:
@@ -319,5 +317,3 @@ void sendToPushingBox(OSCBundle *bndl)
 //     //while(1); // stop awhile
 //    //}
 // }
-
-

@@ -5,7 +5,6 @@
 #include <Wire.h>
 #include "Adafruit_SHT31.h" //for the SHT31-D sensors (temperature and hummidity)
 #include <Adafruit_Sensor.h> // for the TSL2561 sensor (luminosity sensor)
-#include <SPI.h>
 #include <SD.h> // for datalogging
 #include <Adafruit_TSL2561_U.h> // for the TSL2561 sensor (luminosity sensor)
 #include <SDS011-select-serial.h> // for SDS-011 dust sensor
