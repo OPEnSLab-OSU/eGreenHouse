@@ -30,10 +30,23 @@ void setup() {                                                                //
 
 void loop() {                                                                 //Put your main code here, to run repeatedly:
 
-  if(Loom.LoRa().receive_blocking(5000)){                                     //You have to use LoRa Blocking rather than LoRa Recieve becauase Recieve must be run at the same time with Transmit folder
-    Loom.display_data();                                                      //There is a wait time to recieve the data (1000 = 1 second)
+  // The code below will be part of sending coordinates to the HyperDrive while recieve coordinates from the GUI
 
-                                                                              //Google Sheets
+  // Send coordinates values as a JSON package to the HyperDrive
+  // Loom.LoRa().send(6);
+
+
+  // The code below will be part of recieving package from the SensorPackage
+
+  if(Loom.LoRa().receive_blocking(500000)){                                   //You have to use LoRa Blocking rather than LoRa Recieve becauase Recieve must be run at the same time with Transmit folder
+                                                                              //There is a wait time to recieve the data (1000 = 1 second)
+    LPrintln("Package Recieve, Ready to publish!")
+    Loom.display_data();                                                      
+
     Loom.GoogleSheets().publish();                                            //The statement is self-explanatory that you are publishing the data on the Googlesheets
+  }
+
+  else{
+    LPrintln("Package not Recieve, Trying again...")                          //In this case, we will wait for 5 minutes. If we don't get a package, then we will return this statment
   }
 }
