@@ -30,21 +30,21 @@ void setup() {
 
 void loop() {    
 
-  if(Loom.LoRa().receive_blocking(500000)){                       //You have to use LoRa Blocking rather than LoRa Recieve becauase Recieve must be run at the same time with Transmit folder
-                                                                  //There is a wait time to recieve the data (1000 = 1 second)
-    //Move the coordinates as the following                       //In this case, we will wait for 5 minutes
-    //(No code for this right now)                                
+// If control from the GUI recieve, then send command that to power up and measure data from the sensor package
 
-    LPrintln("HyperDrive has been moved to its position!");
-    Loom.LoRa().send(9);
+  //if(Loom.LoRa().receive_blocking(5000)){ Loom.LoRa.send_impl(1,3)}
+  //Loom.LoRa().send_impl(1,3);
+  if(Loom.LoRa().receive_blocking(5000)){                       //You have to use LoRa Blocking rather than LoRa Recieve becauase Recieve must be run at the same time with Transmit folder
+                                                                //There is a wait time to recieve the data (1000 = 1 second)
+//Logging data on the SD Card
+//Loom.SDCARD().log();                                          //You can either use this statement that will generate a file name "datafile.csv"
+                                                                //But you can make your own file name like mine
+  Loom.SDCARD().log("Ken.csv");                                 //I recommend using it to identify the difference the data/organization
 
-    //If there is a case that the HyperDrive is unable to move, it will do the following statements below
-    //LPrintln("Somehow unable to move, the location is either at the starting position or previous position.")
-    //Send the message above rather than the coordinates.
-    //Loom.LoRa().send(9);   
+//Communcating with the other borad  
+  Loom.LoRa().send(9);                                          //You are sending Data to a board that as the address of 9 in the parameters
+                                                                //When you are writing the Receive code, unless you are turing both board at the same time,
+                                                                //You must need to write the Receive Blocking code rather than normal Receive
 
   }
-  else{
-    LPrintln("Communcation Issues with the Hub, Trying again...");
-    }
 }
