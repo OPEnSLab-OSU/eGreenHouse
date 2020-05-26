@@ -3,6 +3,7 @@
 //Also, If you want to change the googlesheet publish address, please check the googlesheet parts in the config
 
 #include <Loom.h>
+#include <ArduinoJson.h>
 
 //Basic Setup for Loom
 const char* json_config = 
@@ -32,9 +33,11 @@ void loop() {                                                                 //
 
   // The code below will be part of sending coordinates to the HyperDrive while recieve coordinates from the GUI
 
-  // Send coordinates values as a JSON package to the HyperDrive
-  // Loom.LoRa().send(6);
-
+  if (Serial.available()){
+    GetData();
+    Loom.package();
+    Loom.LoRa().send(6);
+  }
 
   // The code below will be part of recieving package from the SensorPackage
 
@@ -47,6 +50,40 @@ void loop() {                                                                 //
   }
 
   else{
-    LPrintln("Package not Recieve, Trying again...")                          //In this case, we will wait for 5 minutes. If we don't get a package, then we will return this statment
+    LPrintln("Package not Recieve anything, Trying again...")                          //In this case, we will wait for 5 minutes. If we don't get a package, then we will return this statment
   }
+}
+
+// From the New_main_with_Accelstepper.ino
+void GetData()
+{
+  // create JSON object
+  DynamicJsonDocument doc(200); 
+
+  // receive Json String From Processing   
+  String JsonStr = Serial.readString(); 
+  // Serial.println(JsonStr); 
+
+  // Deserialize Object
+  DeserializationError err = deserializeJson(doc, JsonStr); 
+
+  // Print Error and Return From function if deserialization failed
+  if (err) {
+    Serial.print(F("deserializeJson() failed with code "));
+    Serial.println(err.c_str());  
+    return;
+  }
+
+  // Pretty Serialization 
+  serializeJsonPretty(doc, JsonStr); 
+
+  // Store all Values from JSON file as Ints 
+  int X_Location = doc["X_Location"]; 
+  int Y_Location = doc["Y_Location"]; 
+  int Z_Location = doc["Z_Location"]; 
+  int MaxSpeed = doc["Velocity"]; 
+  int Spool_Rad_X = doc["SpoolRadX"]; 
+  int Spool_Rad_YZ = doc["SpoolRadYZ"]; 
+  
+  return; 
 }

@@ -1,24 +1,27 @@
-//This program will recieve data from eGreenHouse_Sensor_Collector program, save it on the SD Card, and send the data to the hub
-//while the hyperdrive will move arounf(A.K.A.) it will move around 
-//Check the Hub and the eGreenHouse_Sensor_Collector programs
+ // File: HyperRail_Main_New.ino
+ // Name: Liam Duncan 
+ //        Made for OPEnS Lab 
+ // Date: 1/21/2020
+ // Description: Code to Drive the HyperRail, Interface with Processing GUI, and Receive data from eGreenhouse
 
-#include <Loom.h>
-#include <ArduinoJson.h>
-#include <AccelStepper.h>
+ #include <Loom.h> 
+ #include <ArduinoJson.h>
+ #include <AccelStepper.h>
 
-const char* json_config =
-#include "config.h"
-;
-
-LoomFactory<
-  Enable::Internet::Disabled,                                   //For GoogleSheet in Wifi/Ethernet,we need to enabled it
-  Enable::Sensors::Disabled,                                    //For GoogleSheet in Wifi/Ethernet,we need to enabled it
-  Enable::Radios::Enabled,                                      //For Communcation between boards
-  Enable::Actuators::Enabled,                                   //For Enabling Motors 
-  Enable::Max::Disabled                                         //Never ever Enable this part: It will kill the program
-> ModuleFactory{};
-
-LoomManager Loom{ &ModuleFactory };                             //Having all of the properties of LoomFactory<> in a manager called Loom
+ const char* json_config = 
+ "{\"general\":{\"device_name\":\"Device\",\"family\":\"Loom\",\"instance_num\":1,\"family_num\":0},\"components\":[{\"name\":\"Loom_DS3231\",\"params\":[11,true]},{\"name\":\"Loom_Interrupt_Manager\",\"params\":[0]},{\"name\":\"Loom_Sleep_Manager\",\"params\":[true,false,1]}]}"
+ ;
+ 
+ // Set enabled modules
+ LoomFactory<
+  Enable::Internet::Disabled,
+  Enable::Sensors::Enabled,
+  Enable::Radios::Disabled,
+  Enable::Actuators::Disabled,
+  Enable::Max::Disabled
+ > ModuleFactory{};
+ 
+ LoomManager Loom{ &ModuleFactory };
 
  // define the steps per revolution for X,Y and Z motors 
  #define X_SPR 1700
@@ -122,135 +125,6 @@ LoomManager Loom{ &ModuleFactory };                             //Having all of 
  int XBMAX_Count = 0; 
  int ZMAX_Count = 0; 
 
-
-void setup() {
-  Serial.begin(9600);
-
-  Loom.begin_serial(true);                                      //Starting Loom
-  Loom.parse_config(json_config);                               //Getting Information in Config.h file
-  Loom.print_config();                                          //Printing out the config.h information to make sure it is running correctly or not
-  
-    // set up interrupts and pins 
-
-  // XA Bump Switches 
-  pinMode(X0ABump, INPUT); 
-  pinMode(XMaxABump, INPUT); 
-
-  // XB Bump Switches 
-  pinMode(X0BBump, INPUT); 
-  pinMode(XMaxBBump, INPUT); 
-
-  // Y axis Bump Switches 
-  pinMode(Y0Bump, INPUT); 
-  pinMode(YMaxBump, INPUT); 
-
-  // Z Axis Bump Switches 
-  pinMode(Z0Bump, INPUT); 
-  pinMode(ZMaxBump, INPUT);  
-
-  // XA Motor Control Pins
-  pinMode(STEPXA, OUTPUT); 
-  pinMode(DIRXA, OUTPUT); 
-
-  // XB Motor Control Pins 
-  pinMode(STEPXB, OUTPUT); 
-  pinMode(DIRXB, OUTPUT); 
-
-  // Y Motor Control Pins
-  pinMode(STEPY, OUTPUT); 
-  pinMode(DIRY, OUTPUT); 
-
-  // Z Motor Control Pins
-  pinMode(STEPZ, OUTPUT); 
-  pinMode(DIRZ, OUTPUT); 
-
-  // Set Max Speed For all Steppers 
-  stepperX.setMaxSpeed(MaxSpeed); 
-  stepperY.setMaxSpeed(MaxSpeed/4); 
-  stepperZ.setMaxSpeed(MaxSpeed/4); 
-
-  // Set the Acceleration for the stepper motors
-  stepperX.setAcceleration(40); 
-  stepperY.setAcceleration(80);
-  stepperZ.setAcceleration(40);
-
- //  initialize all interrupts for Bump Switches 
-
- // X0A Interrupt 
- Loom.InterruptManager().register_ISR(X0ABump, X0A_ISR, FALLING, ISR_Type::IMMEDIATE);
-
- // X0B Interrupt 
- Loom.InterruptManager().register_ISR(X0BBump, X0B_ISR, FALLING, ISR_Type::IMMEDIATE);
-
- // XMaxA Interrupt 
- Loom.InterruptManager().register_ISR(XMaxABump, XMaxA_ISR, FALLING, ISR_Type::IMMEDIATE);
-
- // XMaxB Interrupt 
- Loom.InterruptManager().register_ISR(XMaxBBump, XMaxB_ISR, FALLING, ISR_Type::IMMEDIATE);
-
- // Y0 Interrupt 
- Loom.InterruptManager().register_ISR(Y0Bump, Y0_ISR, FALLING, ISR_Type::IMMEDIATE);
-
- // YMax Interrupt 
- Loom.InterruptManager().register_ISR(YMaxBump, YMax_ISR, FALLING, ISR_Type::IMMEDIATE);
-
- // Z0 Interrupt 
- Loom.InterruptManager().register_ISR(Z0Bump, Z0_ISR, FALLING, ISR_Type::IMMEDIATE);
-
- // ZMax Interrupt 
- Loom.InterruptManager().register_ISR(ZMaxBump, ZMax_ISR, FALLING, ISR_Type::IMMEDIATE);
-
-  LPrintln("\n **HyperDrive Ready** ");                         //Indicating the user that setup function is complete
-}
-
-void loop() {    
-
-  if(Loom.LoRa().receive_blocking(500000)){                       //You have to use LoRa Blocking rather than LoRa Recieve becauase Recieve must be run at the same time with Transmit folder
-                                                                  //There is a wait time to recieve the data (1000 = 1 second)
-    //Move the coordinates as the following                       //In this case, we will wait for 5 minutes
-    
-    // Set Max Speed For all Steppers 
-    stepperX.setMaxSpeed(MaxSpeed); 
-    stepperY.setMaxSpeed(MaxSpeed/2); 
-    stepperZ.setMaxSpeed(MaxSpeed/2);                       
-            
-    int xsteps = mmToSteps(X_Location, X_SPR, Spool_Rad_X, X_Micro );
-    int ysteps = mmToSteps(Y_Location, YZ_SPR, Spool_Rad_YZ, YZ_Micro );
-    int zsteps = mmToSteps(Z_Location, YZ_SPR, Spool_Rad_YZ, YZ_Micro );
-
-    GoTo(xsteps, ysteps, zsteps);                               
-
-    LPrintln("HyperDrive has been moved to its position!");
-    Loom.LoRa().send(9);
-
-
-
-  }
-  else{
-    LPrintln("Communcation Issues with the Hub, Trying again...");
-    }
-}
-
-// Everything below are the functions or variables
-
-int mmToSteps(double mm, int steps_per_revolution, double belt_radius, int micro) {
-
-        // Serial.print("mm = ");
-        // Serial.println(mm); 
-
-        // Serial.print("steps per rev = "); 
-        // Serial.println(steps_per_revolution); 
-
-        // Serial.print("Radius = "); 
-        // Serial.println(belt_radius); 
-  
-        return (int) round((mm*micro)/(2*3.14*belt_radius) * steps_per_revolution);
-    }
-
-
-// Function Gets data from serial port GUI, 
-// turns it into a JSON object, and sets int  
-// values 
 
 // One stepper Motor Step 
 void onestep(int dir, int stepPin, int dirPin) {
@@ -488,6 +362,151 @@ void ZMax_ISR()
   else                                  // reset counter when interrupt is triggered on release of switch 
   ZMAX_Count = 0;  
 }
+ 
+
+
+void setup() {
+
+  Serial.begin(9600); 
+
+  Serial.print("Arduino is Ready!"); 
+
+  // set up interrupts and pins 
+
+  // XA Bump Switches 
+  pinMode(X0ABump, INPUT); 
+  pinMode(XMaxABump, INPUT); 
+
+  // XB Bump Switches 
+  pinMode(X0BBump, INPUT); 
+  pinMode(XMaxBBump, INPUT); 
+
+  // Y axis Bump Switches 
+  pinMode(Y0Bump, INPUT); 
+  pinMode(YMaxBump, INPUT); 
+
+  // Z Axis Bump Switches 
+  pinMode(Z0Bump, INPUT); 
+  pinMode(ZMaxBump, INPUT);  
+
+  // XA Motor Control Pins
+  pinMode(STEPXA, OUTPUT); 
+  pinMode(DIRXA, OUTPUT); 
+
+  // XB Motor Control Pins 
+  pinMode(STEPXB, OUTPUT); 
+  pinMode(DIRXB, OUTPUT); 
+
+  // Y Motor Control Pins
+  pinMode(STEPY, OUTPUT); 
+  pinMode(DIRY, OUTPUT); 
+
+  // Z Motor Control Pins
+  pinMode(STEPZ, OUTPUT); 
+  pinMode(DIRZ, OUTPUT); 
+
+  // Set Max Speed For all Steppers 
+  stepperX.setMaxSpeed(MaxSpeed); 
+  stepperY.setMaxSpeed(MaxSpeed/4); 
+  stepperZ.setMaxSpeed(MaxSpeed/4); 
+
+  // Set the Acceleration for the stepper motors
+  stepperX.setAcceleration(40); 
+  stepperY.setAcceleration(80);
+  stepperZ.setAcceleration(40);
+
+
+  
+ //  initialize all interrupts for Bump Switches 
+
+ // X0A Interrupt 
+ Loom.InterruptManager().register_ISR(X0ABump, X0A_ISR, FALLING, ISR_Type::IMMEDIATE);
+
+ // X0B Interrupt 
+ Loom.InterruptManager().register_ISR(X0BBump, X0B_ISR, FALLING, ISR_Type::IMMEDIATE);
+
+ // XMaxA Interrupt 
+Loom.InterruptManager().register_ISR(XMaxABump, XMaxA_ISR, FALLING, ISR_Type::IMMEDIATE);
+
+ // XMaxB Interrupt 
+ Loom.InterruptManager().register_ISR(XMaxBBump, XMaxB_ISR, FALLING, ISR_Type::IMMEDIATE);
+
+ // Y0 Interrupt 
+ Loom.InterruptManager().register_ISR(Y0Bump, Y0_ISR, FALLING, ISR_Type::IMMEDIATE);
+
+ // YMax Interrupt 
+ Loom.InterruptManager().register_ISR(YMaxBump, YMax_ISR, FALLING, ISR_Type::IMMEDIATE);
+
+ // Z0 Interrupt 
+ Loom.InterruptManager().register_ISR(Z0Bump, Z0_ISR, FALLING, ISR_Type::IMMEDIATE);
+
+ // ZMax Interrupt 
+ Loom.InterruptManager().register_ISR(ZMaxBump, ZMax_ISR, FALLING, ISR_Type::IMMEDIATE);
+
+}
+
+
+int mmToSteps(double mm, int steps_per_revolution, double belt_radius, int micro) {
+
+        // Serial.print("mm = ");
+        // Serial.println(mm); 
+
+        // Serial.print("steps per rev = "); 
+        // Serial.println(steps_per_revolution); 
+
+        // Serial.print("Radius = "); 
+        // Serial.println(belt_radius); 
+  
+        return (int) round((mm*micro)/(2*3.14*belt_radius) * steps_per_revolution);
+    }
+
+
+// Function Gets data from serial port GUI, 
+// turns it into a JSON object, and sets int  
+// values 
+void GetData()
+{
+  // create JSON object
+  DynamicJsonDocument doc(200); 
+
+  // receive Json String From Processing   
+  JsonStr = Serial.readString(); 
+  // Serial.println(JsonStr); 
+
+  // Deserialize Object
+  DeserializationError err = deserializeJson(doc, JsonStr); 
+
+  // Print Error and Return From function if deserialization failed
+  if (err) {
+    Serial.print(F("deserializeJson() failed with code "));
+    Serial.println(err.c_str());
+        
+    return;
+  }
+
+  // Pretty Serialization 
+  serializeJsonPretty(doc, JsonStr); 
+
+
+  // Store all Values from JSON file as Ints 
+  X_Location = doc["X_Location"]; 
+  Y_Location = doc["Y_Location"]; 
+  Z_Location = doc["Z_Location"]; 
+  MaxSpeed = doc["Velocity"]; 
+  Spool_Rad_X = doc["SpoolRadX"]; 
+  Spool_Rad_YZ = doc["SpoolRadYZ"]; 
+
+  // Set Max Speed For all Steppers 
+  stepperX.setMaxSpeed(MaxSpeed); 
+  stepperY.setMaxSpeed(MaxSpeed/2); 
+  stepperZ.setMaxSpeed(MaxSpeed/2); 
+
+
+  return; 
+}
+
+
+
 
 void GoTo(int x, int y, int z)
 {
@@ -591,3 +610,29 @@ void Calibrate()
     calibrated = true; 
    
 }
+
+
+
+// main Loop 
+void loop() {
+
+  // Read Json Object from Processing
+  if(Serial.available()) 
+    GetData();   
+
+// Convert Number of mm to steps for the GoTo Function
+  int xsteps = mmToSteps(X_Location, X_SPR, Spool_Rad_X, X_Micro );
+  int ysteps = mmToSteps(Y_Location, YZ_SPR, Spool_Rad_YZ, YZ_Micro );
+  int zsteps = mmToSteps(Z_Location, YZ_SPR, Spool_Rad_YZ, YZ_Micro );
+ 
+  GoTo(xsteps, ysteps, zsteps); 
+
+Serial.print("String = ");
+Serial.println(JsonStr); 
+
+
+  // if rail is not calibrated then calibrate it 
+//  if(!calibrated)
+//    Calibrate(); 
+
+ }
