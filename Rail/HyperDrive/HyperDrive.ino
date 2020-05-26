@@ -235,14 +235,6 @@ void loop() {
 
 int mmToSteps(double mm, int steps_per_revolution, double belt_radius, int micro) {
 
-        // Serial.print("mm = ");
-        // Serial.println(mm); 
-
-        // Serial.print("steps per rev = "); 
-        // Serial.println(steps_per_revolution); 
-
-        // Serial.print("Radius = "); 
-        // Serial.println(belt_radius); 
   
         return (int) round((mm*micro)/(2*3.14*belt_radius) * steps_per_revolution);
     }

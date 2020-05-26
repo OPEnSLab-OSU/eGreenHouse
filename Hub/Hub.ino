@@ -5,6 +5,9 @@
 #include <Loom.h>
 #include <ArduinoJson.h>
 
+
+#include "eGreenhouseJSON.h"
+
 //Basic Setup for Loom
 const char* json_config = 
 #include "config.h"

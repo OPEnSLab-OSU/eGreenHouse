@@ -28,7 +28,9 @@
 
 #include <Loom.h>                                                                         // Need to include the Loom Package into the program
 
-#include "wiring_private.h"                                                               // This .h file is for the K30 sensor
+#include "wiring_private.h"   
+
+#include "eGreenhouse.h"                                                            // This .h file is for the K30 sensor
 
                                                                                           // Include Configuration
 const char* json_config =
@@ -63,8 +65,6 @@ void setup() {                                                                  
 
   LPrintln("\n ** eGreenHouse Sensor Collector Ready ** ");                               // Indicating the user that setup function is complete
 }
-
-
 
 void loop() {                                                                             // Put your main code here, to run repeatedly:
 
