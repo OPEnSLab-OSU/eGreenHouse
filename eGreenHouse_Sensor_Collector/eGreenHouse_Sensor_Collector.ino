@@ -76,7 +76,7 @@ void loop() {                                                                   
   Loom.display_data();                                                                // Display printed JSON formatted data on serial monitor
   Loom.SDCARD().log("eGreenHouse.csv");                                               // Log the data values (packages) into the file from SD Card
 
-  Loom.LoRa().send(6);                                                                // Send the package to the board that its ID is 6 (This board is 3 (look at config, LoRa))
+  Loom.LoRa().send(9);                                                                // Send the package to the board that its ID is 9 (This board is 3 (look at config, LoRa))
   Loom.pause(1000);                                                                   // Loom will pause to take a break for 1 second of measuring and go back to loop()
 }
 
