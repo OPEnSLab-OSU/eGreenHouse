@@ -1,4 +1,4 @@
-//////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // This is the eGreenHouse Sensor Collector Package.
 // This program will measure values of the following sensors 
@@ -28,7 +28,7 @@
 // J. Full Spectrum Light in nm from TSL2591
 // K. CO2 value in ppm
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #include <Loom.h>                                                                     // Need to include the Loom Package into the program
 
@@ -51,6 +51,20 @@ LoomManager Loom{ &ModuleFactory };                                             
 
 Uart Serial2 = Uart(&sercom1, 12, 11, SERCOM_RX_PAD_3, UART_TX_PAD_0);                // Create Serial SERCOM for K30 Sensor: RX pin 12, TX pin 11
  
+void warmUpTimer(){                                                                   // This function is a timer to warm up the K30 sensor to get accurate measurements
+  
+  LPrintln("\n ** Set up 6 minutes Warm Up time to get accurate measurements ** ");
+
+  for(int timePassed = 1; timePassed < 7; timePassed++){                              // By pausing Loom, it will not measure CO2 value for 6 minutes
+    Loom.pause(60000);                                                                // The max is only 1 min for pause, we loop it for 6 times to make it 6 minutes
+    LPrint(timePassed);                                                               // Knowing the User that how many minutes have been passed
+    LPrint(" minute(s) passed!");
+    LPrint("\n");
+  }
+  
+  LPrintln("\n ** Ready to Measure ** ");
+}
+
 
 void setup() {                                                                        // Put your setup code here, to run once:
 
@@ -66,15 +80,16 @@ void setup() {                                                                  
   Loom.K30().set_serial(&Serial2);                                                    // Set the K30 sensor using Loom (note that we need those previous step to use Loom
 
   LPrintln("\n ** eGreenHouse Sensor Collector Ready ** ");                           // Indicating the user that setup function is complete
-}
 
+  warmUpTimer();                                                                      // This will run the warm up the K30 sensor for 6 minutes: check line 54
+}
 
 
 void loop() {                                                                         // Put your main code here, to run repeatedly:
   Loom.measure();                                                                     // Measuring the Sensor value                   
   Loom.package();                                                                     // Create the data value as one package with its own package number
   Loom.display_data();                                                                // Display printed JSON formatted data on serial monitor
-  Loom.SDCARD().log("eGreenHouse.csv");                                               // Log the data values (packages) into the file from SD Card
+  Loom.SDCARD().log();                                               // Log the data values (packages) into the file from SD Card
 
   Loom.LoRa().send(9);                                                                // Send the package to the board that its ID is 9 (This board is 3 (look at config, LoRa))
   Loom.pause(1000);                                                                   // Loom will pause to take a break for 1 second of measuring and go back to loop()
