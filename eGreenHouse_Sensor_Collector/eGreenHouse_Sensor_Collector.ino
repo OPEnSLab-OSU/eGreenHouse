@@ -89,10 +89,10 @@ void loop() {                                                                   
   Loom.measure();                                                                     // Measuring the Sensor value                   
   Loom.package();                                                                     // Create the data value as one package with its own package number
   Loom.display_data();                                                                // Display printed JSON formatted data on serial monitor
-  Loom.SDCARD().log();                                               // Log the data values (packages) into the file from SD Card
+  Loom.SDCARD().log("eGreenhouse.csv");                                               // Log the data values (packages) into the file from SD Card
 
   Loom.LoRa().send(9);                                                                // Send the package to the board that its ID is 9 (This board is 3 (look at config, LoRa))
-  Loom.pause(1000);                                                                   // Loom will pause to take a break for 1 second of measuring and go back to loop()
+  Loom.pause(5000);                                                                   // Loom will pause to take a break for 5 second of measuring and go back to loop()
 }
 
 void SERCOM1_Handler()  {                                                             // This function needs for K30
