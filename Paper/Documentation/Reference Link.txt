@@ -1,0 +1,1 @@
+https://github.com/OPEnSLab-OSU/OPEnS-Lab-Home/wiki/K30-CO2-Sensor-(SE-0018)#Loom-Coding-with-Arduino
