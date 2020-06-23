@@ -62,7 +62,8 @@ void loop() {
   Loom.measure(); // Sample attached sensors
   Loom.package(); // Format data for display and SD
   Loom.display_data(); // display printed JSON formatted data on serial monitor
-  Loom.SDCARD().log(); // Loggin K30 Data value into SDCard
+  Loom.SDCARD().log("K30_June.csv"); // Loggin K30 Data value into SDCard
+  Loom.LoRa().send(9);
   Loom.pause();
 }
 
