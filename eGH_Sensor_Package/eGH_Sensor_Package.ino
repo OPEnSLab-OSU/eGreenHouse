@@ -88,16 +88,22 @@ void setup() {                                                                  
 
 
 void loop() {                                                                         // Put your main code here, to run repeatedly:
-  Loom.measure();                                                                     // Measuring the Sensor value                   
-  Loom.package();                                                                     // Create the data value as one package with its own package number
-  Loom.display_data();                                                                // Display printed JSON formatted data on serial monitor
-  Loom.SDCARD().log("eGreenhouse.csv");                                               // Log the data values (packages) into the file from SD Card
+  if(Loom.LoRa().receive_blocking(5000)){
+    Loom.display_data();
+    Loom.measure();                                                                     // Measuring the Sensor value                   
+    Loom.add_data("X_Locatiton", "Meter", X_Location);
+    Loom.add_data("Y_Locatiton", "Meter", Y_Location);
+    Loom.add_data("Z_Locatiton", "Meter", Z_Location);
+    Loom.package();                                                                     // Create the data value as one package with its own package number
+    Loom.display_data();                                                                // Display printed JSON formatted data on serial monitor
+    Loom.SDCARD().log("eGreenhouse.csv");                                               // Log the data values (packages) into the file from SD Card
 
-  eGreenhouse_Base out_struct;
-  const JsonObjectConst internal_data = Loom.internal_json(false);
-  json_to_struct(internal_data, out_struct);
-  Loom.LoRa().send_raw(out_struct.raw, sizeof(out_struct.raw), 3);
-  Loom.pause(5000);                                                                   // Loom will pause to take a break for 5 second of measuring and go back to loop()
+    eGreenhouse_Base out_struct;
+    const JsonObjectConst internal_data = Loom.internal_json(false);
+    json_to_struct(internal_data, out_struct);
+    Loom.LoRa().send_raw(out_struct.raw, sizeof(out_struct.raw), 3);
+    Loom.pause(5000);                                                                   // Loom will pause to take a break for 5 second of measuring and go back to loop()
+  }
 }
 
 void SERCOM1_Handler()  {                                                             // This function needs for K30

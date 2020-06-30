@@ -33,6 +33,46 @@ void setup() {                                                                //
 }
 
 void loop() {                                                                 //Put your main code here, to run repeatedly:
+
+  // Read Json Object from Processing
+  if(Serial.available()){
+    DynamicJsonDocument doc(400);
+    String JsonStr = Serial.readString();
+
+    DeserializationError err = deserializeJson(doc, JsonStr);
+
+    if (err){
+      Serial.print(F("deserializeJson() failed with code "));
+      Serial.println(err.c_str());
+
+      return ;
+    }
+
+    serializeJsonPretty(doc, JsonStr);
+
+    
+
+    int X_Location = doc["X_Location"]; 
+    int Y_Location = doc["Y_Location"]; 
+    int Z_Location = doc["Z_Location"]; 
+    int MaxSpeed = doc["Velocity"]; 
+    int Spool_Rad_X = doc["SpoolRadX"]; 
+    int Spool_Rad_YZ = doc["SpoolRadYZ"];
+
+    doc.clear();
+    
+    Loom.add_data("X_Locatiton", "MM(x)", X_Location);
+    Loom.add_data("Y_Locatiton", "MM(y)", Y_Location);
+    Loom.add_data("Z_Locatiton", "MM(z)", Z_Location);
+    Loom.add_data("MaxSpeed", "Velocity", MaxSpeed);
+    Loom.add_data("Spool_Rad_X", "Radius(x)", Spool_Rad_X);
+    Loom.add_data("Spool_Rad_YZ", "Radius(yz)", Spool_Rad_YZ);
+
+    Loom.display_data();
+    Loom.LoRa().send(6);
+    
+  }
+  
   eGreenhouse_Base in_data;
   if(Loom.LoRa().receive_blocking_raw(in_data.raw, sizeof(in_data.raw), 1000)){
     JsonObject internal_json = Loom.internal_json(true);
