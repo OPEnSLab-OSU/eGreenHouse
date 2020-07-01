@@ -89,12 +89,21 @@ void setup() {                                                                  
 
 void loop() {                                                                         // Put your main code here, to run repeatedly:
   if(Loom.LoRa().receive_blocking(5000)){
-    Loom.display_data();
-    Loom.measure();                                                                     // Measuring the Sensor value                   
-    Loom.add_data("X_Locatiton", "Meter", X_Location);
-    Loom.add_data("Y_Locatiton", "Meter", Y_Location);
-    Loom.add_data("Z_Locatiton", "Meter", Z_Location);
+    const JsonObject coordinates_json = Loom.internal_json(false);
+
+    const JsonArray contents = coordinates_json["contents"];
+        
+    int X_Location = contents[0]["data"]["MM"]; 
+    int Y_Location = contents[1]["data"]["MM"]; 
+    int Z_Location = contents[2]["data"]["MM"]; 
+    
+    Loom.measure();                                                                     // Measuring the Sensor value  
     Loom.package();                                                                     // Create the data value as one package with its own package number
+                
+    Loom.add_data("X_Locatiton", "MM", X_Location);
+    Loom.add_data("Y_Locatiton", "MM", Y_Location);
+    Loom.add_data("Z_Locatiton", "MM", Z_Location);
+    
     Loom.display_data();                                                                // Display printed JSON formatted data on serial monitor
     Loom.SDCARD().log("eGreenhouse.csv");                                               // Log the data values (packages) into the file from SD Card
 

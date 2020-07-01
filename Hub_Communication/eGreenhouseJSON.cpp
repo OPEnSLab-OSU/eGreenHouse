@@ -87,17 +87,26 @@ void json_to_struct(const JsonObjectConst& data, eGreenhouse_Base& out) {
   get_data_point_from_contents(contents, "SHT31D", "humid", out.data.sht31dHumidity);
 
     // TSL2591 Vis
-    get_data_point_from_contents_int(contents, "TSL2591", "Vis", out.data.tsl2591Vis);
+  get_data_point_from_contents_int(contents, "TSL2591", "Vis", out.data.tsl2591Vis);
 
     // TSL2591 IR
-    get_data_point_from_contents_int(contents, "TSL2591", "IR", out.data.tsl2591IR);
+  get_data_point_from_contents_int(contents, "TSL2591", "IR", out.data.tsl2591IR);
 
     // TSL2591 Full
-    get_data_point_from_contents_int(contents, "TSL2591", "Full", out.data.tsl2591Full);
+  get_data_point_from_contents_int(contents, "TSL2591", "Full", out.data.tsl2591Full);
 
     // K30
-    get_data_point_from_contents(contents, "K30", "C02", out.data.k30);
-  
+  get_data_point_from_contents(contents, "K30", "C02", out.data.k30);
+
+    // X_Location
+   get_data_point_from_contents_int(contents, "X_Location", "MM", out.data.X);
+
+   // Y_Location
+   get_data_point_from_contents_int(contents, "Y_Location", "MM", out.data.Y);
+
+   // X_Location
+   get_data_point_from_contents_int(contents, "Z_Location", "MM", out.data.Z);
+
   // timestamp
   const JsonObjectConst stamp = data["timestamp"];
   if (!stamp.isNull()) {
@@ -163,4 +172,21 @@ void struct_to_json(const eGreenhouse_Base& in, const JsonObject& out) {
     data["CO2"] = in.data.k30;
   }
 
+  //X_Location
+  {
+    const JsonObject data = make_module_object(contents, "X_Location");
+    data["MM"] = in.data.X;
+  }
+  
+  //Y_Location
+  {
+    const JsonObject data = make_module_object(contents, "Y_Location");
+    data["MM"] = in.data.Y;
+  }
+
+    //Y_Location
+  {
+    const JsonObject data = make_module_object(contents, "Z_Location");
+    data["MM"] = in.data.Z;
+  }
 }

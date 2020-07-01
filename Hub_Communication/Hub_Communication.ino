@@ -61,12 +61,12 @@ void loop() {                                                                 //
 
     doc.clear();
     
-    Loom.add_data("X_Locatiton", "MM(x)", X_Location);
-    Loom.add_data("Y_Locatiton", "MM(y)", Y_Location);
-    Loom.add_data("Z_Locatiton", "MM(z)", Z_Location);
+    Loom.add_data("X_Locatiton", "MM", X_Location);
+    Loom.add_data("Y_Locatiton", "MM", Y_Location);
+    Loom.add_data("Z_Locatiton", "MM", Z_Location);
     Loom.add_data("MaxSpeed", "Velocity", MaxSpeed);
-    Loom.add_data("Spool_Rad_X", "Radius(x)", Spool_Rad_X);
-    Loom.add_data("Spool_Rad_YZ", "Radius(yz)", Spool_Rad_YZ);
+    Loom.add_data("Spool_Rad_X", "Radius", Spool_Rad_X);
+    Loom.add_data("Spool_Rad_YZ", "Radius", Spool_Rad_YZ);
 
     Loom.display_data();
     Loom.LoRa().send(6);

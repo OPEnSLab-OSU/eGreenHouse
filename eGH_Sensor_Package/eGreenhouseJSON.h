@@ -17,6 +17,9 @@ struct eGreenhouse_Base_t
     int tsl2591IR;
     int tsl2591Full;
     float k30;
+    int X;
+    int Y;
+    int Z;
 };
 
 typedef union {
