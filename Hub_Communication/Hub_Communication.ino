@@ -80,7 +80,7 @@ void loop() {                                                                   
     Loom.display_data();                                                            // Display printed new JSON formatted data on serial monitor to double check 
     Loom.LoRa().send(6);                                                            // Send out JSON to the HyperRail Code
 
-    Loom.pause(35000);                                                              // Wait to finish both HyperRail and Sensor Package
+    Loom.pause(5000);                                                              // Wait to finish both HyperRail and Sensor Package
 
     eGreenhouse_Base in_data;                                                       // Create a new struct to convert back JSON
     if(Loom.LoRa().receive_blocking_raw(in_data.raw, sizeof(in_data.raw), 5000)){   // Wait the package from the Sensor Package for 5 seconds. If not then it will not be publish
