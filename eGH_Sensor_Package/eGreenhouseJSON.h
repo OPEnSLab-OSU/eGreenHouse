@@ -20,6 +20,7 @@ struct eGreenhouse_Base_t
     int X;
     int Y;
     int Z;
+    int done;
 };
 
 typedef union {
