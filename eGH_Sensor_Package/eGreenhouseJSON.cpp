@@ -5,15 +5,18 @@ static bool get_data_point_from_contents(const JsonArrayConst& contents, const c
     for(const JsonVariantConst& module_data: contents){
         const char* name = module_data["module"];
         if (name == nullptr){
+          out = 1.0;
             continue;
         }
         if (strncmp(name, module_name, 15) != 0){
+          out = 2.0;
             continue;
         }
 
         const JsonObjectConst data_obj = module_data["data"];
 
         if (data_obj.isNull()){
+          out = 3.0;
             continue;
         }
 
@@ -24,8 +27,6 @@ static bool get_data_point_from_contents(const JsonArrayConst& contents, const c
             return true;
         }
     }
-
-    out = NAN;
     return false;
 }
 
@@ -33,18 +34,20 @@ static bool get_data_point_from_contents_int(const JsonArrayConst& contents, con
   for (const JsonVariantConst& module_data : contents) {
 
     const char* name = module_data["module"];
-    if (name == nullptr)
-
+    if (name == nullptr){
+      out = 1;
       continue;
-
-    if (strncmp(name, module_name, 15) != 0)
+    }
+    if (strncmp(name, module_name, 15) != 0){
+      out = 2;
       continue;
-
+    }
     const JsonObjectConst data_obj = module_data["data"];
 
-    if (data_obj.isNull())
+    if (data_obj.isNull()){
+      out = 3;
       continue;
-
+    }
     const JsonVariantConst data_value = data_obj[data_key];
     if (!data_value.isNull() && data_value.is<int>()) {
 
@@ -54,7 +57,6 @@ static bool get_data_point_from_contents_int(const JsonArrayConst& contents, con
     }
   }
 
-  out = -333;
   return false;
 }
 
@@ -106,6 +108,9 @@ void json_to_struct(const JsonObjectConst& data, eGreenhouse_Base& out) {
 
    // X_Location
    get_data_point_from_contents_int(contents, "Z_Location", "MM", out.data.Z);
+
+   // Boolean_Hyper_Move
+   get_data_point_from_contents_int(contents, "HyperRail_Passes", "Boolean", out.data.done);
 
   // timestamp
   const JsonObjectConst stamp = data["timestamp"];
@@ -184,9 +189,15 @@ void struct_to_json(const eGreenhouse_Base& in, const JsonObject& out) {
     data["MM"] = in.data.Y;
   }
 
-    //Y_Location
+    //Z_Location
   {
     const JsonObject data = make_module_object(contents, "Z_Location");
     data["MM"] = in.data.Z;
   }
+
+   //Hyper_Rail_Move
+   {
+    const JsonObject data = make_module_object(contents, "HyperRail_Passes");
+    data["Boolean"] = in.data.done;
+   }
 }
