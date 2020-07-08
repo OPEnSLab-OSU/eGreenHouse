@@ -43,6 +43,8 @@ void loop() {
    if(Loom.LoRa().receive_blocking(5000)){                              // If LoRa receive something, then start these statments
     
     Loom.display_data();                                                // Display printed JSON formatted data on serial monitor
+
+    DynamicJsonDocument doc(400);                                       // Create an DynamicJsonDocument to edit the JSON
     
     const JsonObject coordinates_json = Loom.internal_json(false);      // Create JsonObject that was received from the Hub
 
@@ -54,8 +56,12 @@ void loop() {
     int MaxSpeed = contents[3]["data"]["Velocity"];                     // Get the MaxSpeed from JSON
     int Spool_Rad_X = contents[4]["data"]["Radius"];                    // Get the Spool_Rad_X from JSON
     int Spool_Rad_YZ = contents[5]["data"]["Radius"];                   // Get the Spool_Rad_YZ from JSON
+
+    doc.clear();                                                        // Clear the JSON because we don't need it anymore
    
-    Loom.add_data("HyperRail_Passes", "Boolean", 1); 
+    Loom.add_data("X_Locatiton", "MM", X_Location);                     // Add X_Location to be record and send to the other board
+    Loom.add_data("Y_Locatiton", "MM", Y_Location);                     // Add Y_Location to be record and send to the other board
+    Loom.add_data("Z_Locatiton", "MM", Z_Location);                     // Add Z_Location to be record and send to the other board
     
     Loom.display_data();                                                // Display printed new JSON formatted data on serial monitor to double check 
    

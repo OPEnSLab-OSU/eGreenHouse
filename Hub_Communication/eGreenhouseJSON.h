@@ -1,7 +1,7 @@
 #pragma once
 
 #include <stdint.h>
-#include <ArduinoJson.h> 
+#include <ArduinoJson.h> //Need to include
 
 
 struct eGreenhouse_Base_t
@@ -20,7 +20,6 @@ struct eGreenhouse_Base_t
     int X;
     int Y;
     int Z;
-    int done;
 };
 
 typedef union {

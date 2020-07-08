@@ -107,9 +107,6 @@ void json_to_struct(const JsonObjectConst& data, eGreenhouse_Base& out) {
    // X_Location
    get_data_point_from_contents_int(contents, "Z_Location", "MM", out.data.Z);
 
-   // Boolean_Hyper_Move
-   get_data_point_from_contents_int(contents, "HyperRail_Passes", "Boolean", out.data.done);
-
   // timestamp
   const JsonObjectConst stamp = data["timestamp"];
   if (!stamp.isNull()) {
@@ -187,15 +184,9 @@ void struct_to_json(const eGreenhouse_Base& in, const JsonObject& out) {
     data["MM"] = in.data.Y;
   }
 
-    //Z_Location
+    //Y_Location
   {
     const JsonObject data = make_module_object(contents, "Z_Location");
     data["MM"] = in.data.Z;
   }
-
-   //Hyper_Rail_Move
-   {
-    const JsonObject data = make_module_object(contents, "HyperRail_Passes");
-    data["Boolean"] = in.data.done;
-   }
 }
