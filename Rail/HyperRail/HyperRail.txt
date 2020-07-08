@@ -1,3 +1,0 @@
-https://www.airspayce.com/mikem/arduino/RadioHead/
-https://github.com/OPEnSLab-OSU/HyperRail/blob/master/Code/Hyper_Rail_GUI_New/Hyper_Rail_GUI_New.pde
-https://www.arduino.cc/reference/en/language/functions/communication/serial/read/
