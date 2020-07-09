@@ -35,7 +35,6 @@
 #include "wiring_private.h"                                                           // This .h file is for the K30 sensor
 
 #include "eGreenhouseJSON.h"                                                          // Include the JSON Package constructor
-
                                                                                       // Include Configuration
 const char* json_config =
 #include "config.h"
@@ -86,17 +85,22 @@ void setup() {                                                                  
   warmUpTimer();                                                                      // This will run the warm up the K30 sensor for 6 minutes: check line 56
 }
 
+int checker = 11;
 
 void loop() {                                                                         // Put your main code here, to run repeatedly:
+ 
   if(Loom.LoRa().receive_blocking(30000)){
-      if(Loom.internal_json(false)["contents"][6]["data"]["Boolean"] == 1){
+      
+      Loom.display_data();
+      
+      const JsonObject coordinates_json = Loom.internal_json(false);                    // Create a new JsonObject that was received from the HyperRail
 
-        const JsonObject coordinates_json = Loom.internal_json(false);                    // Create a new JsonObject that was received from the HyperRail
-
-        const JsonArray contents = coordinates_json["contents"];                          // Create a JsonArray from the JSON 
-    
-        Loom.display_data();
-        
+      const JsonArray contents = coordinates_json["contents"];                          // Create a JsonArray from the JSON 
+      
+      checker = contents[6]["data"]["Boolean"];
+      LPrintln(checker);
+      if( checker == 1){
+                
         int X_Location = contents[0]["data"]["MM"];                                   // Get the X_Location from JSON
         int Y_Location = contents[1]["data"]["MM"];                                   // Get the Y_Location from JSON
         int Z_Location = contents[2]["data"]["MM"];                                   // Get the Z_Location from JSON
@@ -119,35 +123,7 @@ void loop() {                                                                   
       }
       else{
         LPrintln("Failed to get the correct message");
-        if(Loom.LoRa().receive_blocking(30000)){
-          const JsonObject coordinates_json = Loom.internal_json(false);                    // Create a new JsonObject that was received from the HyperRail
-
-          const JsonArray contents = coordinates_json["contents"];                          // Create a JsonArray from the JSON 
-    
-          Loom.display_data();
-        
-          int X_Location = contents[0]["data"]["MM"];                                   // Get the X_Location from JSON
-          int Y_Location = contents[1]["data"]["MM"];                                   // Get the Y_Location from JSON
-          int Z_Location = contents[2]["data"]["MM"];                                   // Get the Z_Location from JSON
-        
-          Loom.measure();                                                               // Measuring the Sensor value  
-          Loom.package();                                                               // Create the data value as one package with its own package number
-
-          Loom.add_data("X_Location", "MM", X_Location);
-          Loom.add_data("Y_Location", "MM", Y_Location);
-          Loom.add_data("Z_Location", "MM", Z_Location);
-          Loom.add_data("HyperRail_Passes", "Boolean", 2);
-                
-          Loom.display_data();                                                          // Display printed JSON formatted data on serial monitor
-          Loom.SDCARD().log();                                                          // Log the data values (packages) into the file from SD Card
-
-          eGreenhouse_Base out_struct;                                                  // Create a new out_struct to send large size content over LoRa
-          const JsonObjectConst internal_data = Loom.internal_json(false);              // Create a new Json Object with the Sensor values
-          json_to_struct(internal_data, out_struct);                                    // Use that new Json to convert to Struct
-          Loom.LoRa().send_raw(out_struct.raw, sizeof(out_struct.raw), 3);              // Send out the Struct Data to the other Board: Check out eGreenhouse.cpp and eGreenhouse.h
-          
-        }
-      }
+     }
   }
 }
 

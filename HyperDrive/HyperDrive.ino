@@ -59,12 +59,12 @@ void loop() {
 
     doc.clear();                                                        // Clear the JSON because we don't need it anymore
    
-    Loom.add_data("X_Locatiton", "MM", X_Location);                     // Add X_Location to be record and send to the other board
-    Loom.add_data("Y_Locatiton", "MM", Y_Location);                     // Add Y_Location to be record and send to the other board
-    Loom.add_data("Z_Locatiton", "MM", Z_Location);                     // Add Z_Location to be record and send to the other board
+    Loom.pause(10000);
+
+    Loom.add_data("HyperRail_Passes", "Boolean", 1);
+
+    Loom.displat_data();
     
-    Loom.display_data();                                                // Display printed new JSON formatted data on serial monitor to double check 
-   
     Loom.LoRa().send(9);                                                // Send out JSON to the Sensor Package code 
     
    }

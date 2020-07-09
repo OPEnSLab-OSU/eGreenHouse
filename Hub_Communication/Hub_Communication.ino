@@ -80,15 +80,21 @@ void loop() {                                                                   
     Loom.display_data();                                                            // Display printed new JSON formatted data on serial monitor to double check 
     Loom.LoRa().send(6);                                                            // Send out JSON to the HyperRail Code
 
-    Loom.pause(35000);                                                              // Wait to finish both HyperRail and Sensor Package
-
+   
     eGreenhouse_Base in_data;                                                       // Create a new struct to convert back JSON
-    if(Loom.LoRa().receive_blocking_raw(in_data.raw, sizeof(in_data.raw), 5000)){   // Wait the package from the Sensor Package for 5 seconds. If not then it will not be publish
+    if(Loom.LoRa().receive_blocking_raw(in_data.raw, sizeof(in_data.raw), 15000)){   // Wait the package from the Sensor Package for 5 seconds. If not then it will not be publish
       JsonObject internal_json = Loom.internal_json(true);                          // Create a new JSON
       struct_to_json(in_data, internal_json);                                       // Convert incoming struct to JSON
       Loom.display_data();                                                          // Display printed new JSON formatted data on serial monitor to double check 
       const JsonObject complete_json = Loom.internal_json(false);
-      if (complete_json["contents"][10]["Boolean"] == 2){
+      Loom.GoogleSheets().publish();
+
+    }
+  }
+}
+
+/*
+ *       if (complete_json["contents"][10]["Boolean"] == 2){
         Loom.GoogleSheets().publish();
       }
       else{
@@ -100,6 +106,4 @@ void loop() {                                                                   
           Loom.GoogleSheets().publish();                                                // Publish to GoogleSheets
         }
       }
-    }
-  }
-}
+      */
