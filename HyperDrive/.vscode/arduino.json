@@ -1,6 +1,0 @@
-{
-    "board": "loom:samd:loom",
-    "configuration": "usbstack=arduino,debug=off",
-    "port": "COM10",
-    "sketch": "HyperDrive.ino"
-}

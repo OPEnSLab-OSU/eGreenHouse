@@ -1,7 +1,7 @@
 #pragma once
 
 #include <stdint.h>
-#include <ArduinoJson.h> 
+#include <ArduinoJson.h> //Need to include
 
 
 struct eGreenhouse_Base_t
@@ -28,4 +28,5 @@ typedef union {
     uint8_t raw[sizeof(eGreenhouse_Base_t)];
 } eGreenhouse_Base;
 
-void eGH_json_to_struct(const JsonObjectConst& data, eGreenhouse_Base& out);
+
+void hub_struct_to_json(const eGreenhouse_Base& in, const JsonObject& out);

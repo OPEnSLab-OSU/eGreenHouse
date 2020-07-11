@@ -12,19 +12,17 @@
 // Author: Kenneth Kang
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 #include <Loom.h>                                                                   // Need to include the Loom Package into the program
 #include <ArduinoJson.h>                                                            // Need to include for the JsonDocument
 
 
-#include "eGreenhouseJSON.h"                                                        // Include the JSON Package constructor
 
 const char* json_config =                                                           // Include Configuration
 #include "config.h"
 ;
 
 LoomFactory<
-  Enable::Internet::All,                                                            //For GoogleSheet in Wifi/Ethernet,we need to enabled it
+  Enable::Internet::Disabled,                                                            //For GoogleSheet in Wifi/Ethernet,we need to enabled it
   Enable::Sensors::Disabled,                                                        //For getting sensor data: We don't need it for this program
   Enable::Radios::Enabled,                                                          //For Communcation between boards
   Enable::Actuators::Disabled,                                                      //For Motors (It will be part in the Hyperdrive)
@@ -44,22 +42,21 @@ void setup() {                                                                  
 
 void loop() {                                                                       //Put your main code here, to run repeatedly:
 
-  if(Serial.available()){                                                           // Read Json Object from Processing
-    DynamicJsonDocument doc(400);                                                   // Create an DynamicJsonDocument to edit the JSON
-    String JsonStr = Serial.readString();                                           // Get JSON.string() from user input from the Processing
+  if(Serial.available()){
+    LPrintln("Accepted");
+    DynamicJsonDocument doc(400);
+    String JsonStr = Serial.readString();
 
-    DeserializationError err = deserializeJson(doc, JsonStr);                       // Deserialize the JsonString 
+    DeserializationError err = deserializeJson(doc, JsonStr);
 
-    if (err){                                                                       // If there an error, then it will enter this condition
+    if(err){
       Serial.print(F("deserializeJson() failed with code "));
       Serial.println(err.c_str());
-
       return ;
     }
 
-    serializeJsonPretty(doc, JsonStr);                                              // Serialize JSON using the DynamicJsonDocument and User Input
+    serializeJsonPretty(doc, JsonStr);
 
-    
 
     int X_Location = doc["X_Location"];                                             // Get the X_Location from JSON
     int Y_Location = doc["Y_Location"];                                             // Get the Y_Location from JSON
@@ -70,40 +67,19 @@ void loop() {                                                                   
 
     doc.clear();                                                                    // Clear the JSON because we don't need it anymore
     
+    Loom.add_data("Hyper_Passes", "B", -1);
     Loom.add_data("X_Locatiton", "MM", X_Location);                                 // Add X_Location to be record and send to the other board
     Loom.add_data("Y_Locatiton", "MM", Y_Location);                                 // Add Y_Location to be record and send to the other board
     Loom.add_data("Z_Locatiton", "MM", Z_Location);                                 // Add Z_Location to be record and send to the other board
     Loom.add_data("MaxSpeed", "Velocity", MaxSpeed);                                // Add MaxSpeed to be record and send to the other board
     Loom.add_data("Spool_Rad_X", "Radius", Spool_Rad_X);                            // Add Spool_Rad_X to be record and send to the other board
     Loom.add_data("Spool_Rad_YZ", "Radius", Spool_Rad_YZ);                          // Add Spool_Rad_YZ to be record and send to the other board
+    
 
     Loom.display_data();                                                            // Display printed new JSON formatted data on serial monitor to double check 
     Loom.LoRa().send(6);                                                            // Send out JSON to the HyperRail Code
 
-   
-    eGreenhouse_Base in_data;                                                       // Create a new struct to convert back JSON
-    if(Loom.LoRa().receive_blocking_raw(in_data.raw, sizeof(in_data.raw), 15000)){   // Wait the package from the Sensor Package for 5 seconds. If not then it will not be publish
-      JsonObject internal_json = Loom.internal_json(true);                          // Create a new JSON
-      struct_to_json(in_data, internal_json);                                       // Convert incoming struct to JSON
-      Loom.display_data();                                                          // Display printed new JSON formatted data on serial monitor to double check 
-      const JsonObject complete_json = Loom.internal_json(false);
-      Loom.GoogleSheets().publish();
-
-    }
   }
+   
+  
 }
-
-/*
- *       if (complete_json["contents"][10]["Boolean"] == 2){
-        Loom.GoogleSheets().publish();
-      }
-      else{
-        if(Loom.LoRa().receive_blocking_raw(in_data.raw, sizeof(in_data.raw), 5000)){   // Wait the package from the Sensor Package for 5 seconds. If not then it will not be publish
-          JsonObject internal_json = Loom.internal_json(true);                          // Create a new JSON
-          struct_to_json(in_data, internal_json);                                       // Convert incoming struct to JSON
-          Loom.display_data();                                                          // Display printed new JSON formatted data on serial monitor to double check 
-          const JsonObject complete_json = Loom.internal_json(false);
-          Loom.GoogleSheets().publish();                                                // Publish to GoogleSheets
-        }
-      }
-      */
