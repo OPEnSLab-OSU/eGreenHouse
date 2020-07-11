@@ -35,17 +35,20 @@ String periodX = "";
 String periodY = "";
 String periodZ = ""; 
 
+int clicked = 0;
+
 JSONObject json = new JSONObject();
+Timer startTimer;
 void setup(){
   
   json.setInt("val", 0);
 
-  size(900, 700);   // Window Size 
+  size(900, 600);   // Window Size 
   
   myPort = new Serial(this, port, 9600);  // Specify COM Port 
   
   HyperGUI = new ControlP5(this);
-  PFont font = createFont("arial", 20); 
+  PFont font = createFont("Georgia", 20); 
   
   
   //*****************X Length Input Box***********
@@ -150,23 +153,66 @@ void setup(){
     
     textFont(font); 
     
+    startTimer = new Timer(360);
+    
 }
 
 void draw()
 {
-
- 
- while (myPort.available() > 0){
-   String result = myPort.readString();
-   if(result != null){
-      background(0);
-      fill(0, 255, 0);
-      println(result);
-      textFont(createFont("arial", 12));
-      textSize(15);
-      text(result, 625, 300);
-   }
+  int teller = clicked;
+  switch(teller){
+    case 0:
+      timer();
+      textMessage();
+      text(startTimer.getTime(), 70, 450);
+      text(" seconds left", 125, 450);
+      break;
+    default:
+      printConsole();
+      textMessage();
+      break;
   }
+}
+
+
+public void textMessage(){
+
+   String K30_Note = "If you just turn on the Sensors, wait for 6 min to warm up for K30 Sensor!";
+   String K30_Timer = "This is a 6 minutes timer for the warm up.";
+   String Message_Meaning = "If it says fail, please check the console log from Processing.";
+   String K30_Timer_Note = "If you already did the 6 mintues warm up, you can ignore the timer.";
+   textFont(createFont("Georgia", 15));
+   text("Console Log", 625, 275);
+   text(K30_Note, 75, 350);
+   text(Message_Meaning, 75, 300);
+   text(K30_Timer, 75, 400);
+   text(K30_Timer_Note, 75, 425);
+}
+
+public void printConsole(){
+  while (myPort.available() > 0){
+     String result = myPort.readString();
+     if(result != null){
+        background(0);
+        fill(0,255,0);
+        println(result);
+        textFont(createFont("Georgia", 15));
+        textMessage();
+        text(result, 625, 300);
+     }
+  }
+}
+  
+
+public void timer(){
+  background(0);
+  fill(0,255,0);
+  if(startTimer.getTime() > 0){
+     startTimer.countDown();
+   }else{
+     startTimer.setTime(0);
+   }
+   
 }
 
 
@@ -214,7 +260,9 @@ void Submit()
   json.setInt("periodY", periodY);
   json.setInt("periodZ", periodZ);
 
+  clicked = 1;
   myPort.write(json.toString());
+  
   
 }
 
@@ -253,6 +301,7 @@ void Calibrate()
   json.setInt("periodY", periodY);
   json.setInt("periodZ", periodZ);
 
+  clicked = 1;
   myPort.write(json.toString());
 }
 
@@ -292,6 +341,7 @@ void Reset()
   json.setInt("periodY", periodY);
   json.setInt("periodZ", periodZ);
 
+  clicked = 1;
   myPort.write(json.toString());
 }
 
@@ -330,5 +380,6 @@ void Loop()
   json.setInt("periodY", periodY);
   json.setInt("periodZ", periodZ);
 
+  clicked = 1;
   myPort.write(json.toString());
 }
