@@ -40,7 +40,7 @@ void setup(){
   
   json.setInt("val", 0);
 
-  size(900, 600);   // Window Size 
+  size(900, 700);   // Window Size 
   
   myPort = new Serial(this, port, 9600);  // Specify COM Port 
   
@@ -140,13 +140,13 @@ void setup(){
       .setText("0")
       ; 
     
-    HyperGUI.addBang("Submit").setPosition(700, 500).setSize(100, 50).getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);    
+    HyperGUI.addBang("Submit").setPosition(500, 500).setSize(100, 50).getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);    
 
-    HyperGUI.addBang("Calibrate").setPosition(550, 500).setSize(100,50).getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER); 
+    HyperGUI.addBang("Calibrate").setPosition(350, 500).setSize(100,50).getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER); 
     
-    HyperGUI.addBang("Reset").setPosition(400, 500).setSize(100,50).getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER); 
+    HyperGUI.addBang("Reset").setPosition(200, 500).setSize(100,50).getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER); 
 
-    HyperGUI.addBang("Loop").setPosition(250, 500).setSize(100,50).getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
+    HyperGUI.addBang("Loop").setPosition(50, 500).setSize(100,50).getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
     
     textFont(font); 
     
@@ -154,13 +154,17 @@ void setup(){
 
 void draw()
 {
- background(0); 
+
  
- fill(0, 255, 0);
  while (myPort.available() > 0){
    String result = myPort.readString();
-   if (result != null){
-     println(result);
+   if(result != null){
+      background(0);
+      fill(0, 255, 0);
+      println(result);
+      textFont(createFont("arial", 12));
+      textSize(15);
+      text(result, 625, 300);
    }
   }
 }
