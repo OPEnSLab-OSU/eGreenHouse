@@ -48,7 +48,7 @@ void loop() {
     const JsonObject coordinates_json = Loom.internal_json(false);      // Open the JSON from the code
     const JsonArray contents = coordinates_json["contents"];            // For simple syntax uses
     
-    checker = contents[0]["data"]["B"];                                 // Update the checker value
+    checker = contents[0]["data"]["Bool"];                                 // Update the checker value
     
     if (checker == -1){                                                 // Check if the board got the right JSON, if not, then it will move the else statement
       
@@ -63,7 +63,7 @@ void loop() {
 
     Loom.pause(10000);                                                  // This is where the function that the hyperRail moves
     
-    contents[0]["data"]["B"] = 2;                                       // Update the checker value that it moved
+    contents[0]["data"]["Bool"] = 2;                                       // Update the checker value that it moved
 
     for (int i = 0; i < 3; i++){                          
       contents.remove(4);                                               // Remove MaxSpeed, Spool_Rad_x, and Spool_Rad_YZ value from the JSON

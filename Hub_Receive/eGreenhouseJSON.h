@@ -28,5 +28,7 @@ typedef union {
     uint8_t raw[sizeof(eGreenhouse_Base_t)];
 } eGreenhouse_Base;
 
+void json_to_struct(const JsonObjectConst& data, eGreenhouse_Base& out);
 
-void hub_struct_to_json(const eGreenhouse_Base& in, const JsonObject& out);
+
+void struct_to_json(const eGreenhouse_Base& in, const JsonObject& out);

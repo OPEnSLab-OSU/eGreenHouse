@@ -47,11 +47,11 @@ void loop() {                                                                   
     eGreenhouse_Base in_data;                                                       // Create a new struct to convert back JSON
     if(Loom.LoRa().receive_blocking_raw(in_data.raw, sizeof(in_data.raw), 15000)){   // Wait the package from the Sensor Package for 5 seconds. If not then it will not be publish
       JsonObject internal_json = Loom.internal_json(true);                          // Create a new JSON
-      hub_struct_to_json(in_data, internal_json);                                       // Convert incoming struct to JSON
+      struct_to_json(in_data, internal_json);                                       // Convert incoming struct to JSON
       Loom.display_data();                                                          // Display printed new JSON formatted data on serial monitor to double check 
       const JsonObject complete_json = Loom.internal_json(false);
       const JsonArray contents = complete_json["contents"];
-      checker = contents[7]["data"]["B"];
+      checker = contents[7]["data"]["Bool"];
       if(checker == 1){
         Loom.GoogleSheets().publish();
       }

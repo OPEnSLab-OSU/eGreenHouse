@@ -25,6 +25,7 @@
 // L. X_Location in mm
 // M. Y_Location in mm
 // N. Z_Location in mm
+// O. HyperRail Moved in Boolean
 
 // Author: Kenneth Kang
 
@@ -80,7 +81,7 @@ void setup() {                                                                  
   
   Loom.K30().set_serial(&Serial2);                                                    // Set the K30 sensor using Loom (note that we need those previous step to use Loom
 
-  LPrintln("\n ** eGreenHouse Sensor Collector Ready ** ");                           // Indicating the user that setup function is complete
+  LPrintln("\n ** eGreenHouse Sensor Package Ready ** ");                           // Indicating the user that setup function is complete
 
   warmUpTimer();                                                                      // This will run the warm up the K30 sensor for 6 minutes: check line 56
 }
@@ -97,7 +98,7 @@ void loop() {                                                                   
 
       const JsonArray contents = coordinates_json["contents"];                          // Create a JsonArray from the JSON 
       
-      checker = contents[0]["data"]["B"];
+      checker = contents[0]["data"]["Bool"];
       LPrintln(checker);
       if(checker == 2){
 
@@ -110,14 +111,14 @@ void loop() {                                                                   
         Loom.add_data("X_Locatiton", "MM", X_Location);                                 // Add X_Location to be record and send to the other board
         Loom.add_data("Y_Locatiton", "MM", Y_Location);                                 // Add Y_Location to be record and send to the other board
         Loom.add_data("Z_Locatiton", "MM", Z_Location);                                 // Add Z_Location to be record and send to the other board
-        Loom.add_data("Hyper_Passes", "B", 1);
+        Loom.add_data("Hyper", "Bool", 1);
                 
         Loom.display_data();                                                            // Display printed JSON formatted data on serial monitor
         Loom.SDCARD().log();                                                            // Log the data values (packages) into the file from SD Card
 
         eGreenhouse_Base out_struct;                                                    // Create a new out_struct to send large size content over LoRa
         const JsonObjectConst internal_data = Loom.internal_json(false);                // Create a new Json Object with the Sensor values
-        eGH_json_to_struct(internal_data, out_struct);                                      // Use that new Json to convert to Struct
+        json_to_struct(internal_data, out_struct);                                      // Use that new Json to convert to Struct
         Loom.LoRa().send_raw(out_struct.raw, sizeof(out_struct.raw), 12);                // Send out the Struct Data to the other Board: Check out eGreenhouse.cpp and eGreenhouse.h
       }
       else{

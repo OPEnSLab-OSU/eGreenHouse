@@ -67,7 +67,7 @@ void loop() {                                                                   
 
     doc.clear();                                                                    // Clear the JSON because we don't need it anymore
     
-    Loom.add_data("Hyper_Passes", "B", -1);
+    Loom.add_data("Hyper", "Bool", -1);
     Loom.add_data("X_Locatiton", "MM", X_Location);                                 // Add X_Location to be record and send to the other board
     Loom.add_data("Y_Locatiton", "MM", Y_Location);                                 // Add Y_Location to be record and send to the other board
     Loom.add_data("Z_Locatiton", "MM", Z_Location);                                 // Add Z_Location to be record and send to the other board
