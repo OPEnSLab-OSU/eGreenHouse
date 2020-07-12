@@ -1,7 +1,7 @@
 #pragma once
 
 #include <stdint.h>
-#include <ArduinoJson.h> 
+#include <ArduinoJson.h> //Need to include
 
 
 struct eGreenhouse_Base_t
@@ -20,6 +20,7 @@ struct eGreenhouse_Base_t
     int X;
     int Y;
     int Z;
+    int done;
 };
 
 typedef union {
@@ -29,48 +30,5 @@ typedef union {
 
 void json_to_struct(const JsonObjectConst& data, eGreenhouse_Base& out);
 
-/*
-[Device] Json:
-{
-  "type": "data",
-  "id": {
-    "name": "Device",
-    "instance": 1
-  },
-  "contents": [
-    {
-      "module": "Packet",
-      "data": {
-        "Number": 12
-      }
-    },
-    {
-      "module": "SHT31D",
-      "data": {
-        "temp": 23.12,
-        "humid": 54.53
-      }
-    },
-    {
-      "module": "TSL2591",
-      "data": {
-        "Vis": 934,
-        "IR": 581,
-        "Full": 1517
-      }
-    },
-    {
-      "module": "K30",
-      "data": {
-        "C02": 882
-      }
-    }
-  ],
-  "timestamp": {
-    "date": "2020/4/30",
-    "time": "4:1:27"
-  }
-}
-*/
 
 void struct_to_json(const eGreenhouse_Base& in, const JsonObject& out);
