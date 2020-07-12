@@ -1,3 +1,23 @@
+/*****************************************************************************************************
+** This is the eGreenhouse.pde file.                                                                **
+**                                                                                                  **
+** This will open a window box that has total of 9 input boxes, texts, a timer for 6 minutes,       **
+** and 4 buttons.                                                                                   **
+**                                                                                                  ** 
+** The box input will only take integers.                                                           **
+** Each box are what values to change.                                                              **
+**                                                                                                  **
+** The texts will inform what to do or what to know.                                                **
+**                                                                                                  **
+** The timer is for the K30 Sensor warm up time. Please the text or eGreenhouse_Sensor_Package.ino  **
+**                                                                                                  **
+** Last the button are self-explanatory what they do.                                               **
+**                                                                                                  **
+** Author: Kenneth Kang and Liam Duncan                                                             **
+**                                                                                                  **
+******************************************************************************************************/
+
+
 /****************************************
 *********Importing Libraries*************
 ****************************************/
@@ -15,26 +35,30 @@ Arduino arduino;
 /****************************************
 *****Declare variable for functions******
 ****************************************/
-String port = "COM10";
+String port = "COM7";
 
 
 String GoTo = "0"; 
-String X_Axis_Length = ""; 
-String Y_Axis_Length = "";
-String Z_Axis_Length = ""; 
-String Velocity = ""; 
-String SpoolRadX = ""; 
-String SpoolRadYZ = ""; 
+int X_Axis_Length; 
+int Y_Axis_Length;
+int Z_Axis_Length;
+int Velocity; 
+int SpoolRadX; 
+int SpoolRadYZ; 
 
 String Reset = "0";
 
 String Calibrate = "0";
 
 String Loop = "0";
-String periodX = "";
-String periodY = "";
-String periodZ = ""; 
+int periodX;
+int periodY;
+int periodZ; 
 
+String K30_Note = "If you just turn on the Sensors, wait for 6 min to warm up for K30 Sensor!";
+String K30_Timer = "This is a 6 minutes timer for the warm up.";
+String Message_Meaning = "If it says fail, please check the console log from Processing.";
+String K30_Timer_Note = "If you already did the 6 mintues warm up, you can ignore the timer.";
 int clicked = 0;
 
 JSONObject json = new JSONObject();
@@ -160,6 +184,7 @@ void setup(){
 void draw()
 {
   int teller = clicked;
+  printConsole();
   switch(teller){
     case 0:
       timer();
@@ -177,16 +202,14 @@ void draw()
 
 public void textMessage(){
 
-   String K30_Note = "If you just turn on the Sensors, wait for 6 min to warm up for K30 Sensor!";
-   String K30_Timer = "This is a 6 minutes timer for the warm up.";
-   String Message_Meaning = "If it says fail, please check the console log from Processing.";
-   String K30_Timer_Note = "If you already did the 6 mintues warm up, you can ignore the timer.";
+
    textFont(createFont("Georgia", 15));
    text("Console Log", 625, 275);
    text(K30_Note, 75, 350);
    text(Message_Meaning, 75, 300);
    text(K30_Timer, 75, 400);
    text(K30_Timer_Note, 75, 425);
+  
 }
 
 public void printConsole(){
@@ -216,32 +239,24 @@ public void timer(){
 }
 
 
-public void Xaxis(String X_Length)
-{
-  println("The X-Axis Length has changed to: " + X_Length); 
-  X_Axis_Length = X_Length; 
-  
-}
-
-
-
 void Submit()
 {
+
   //Get lengths of all axis and convert to ints
-  int X_Axis_Length = Integer.parseInt(HyperGUI.get(Textfield.class, "X-Axis Position (mm)").getText()); 
-  int Y_Axis_Length = Integer.parseInt(HyperGUI.get(Textfield.class, "Y-Axis Position (mm)").getText()); 
-  int Z_Axis_Length = Integer.parseInt(HyperGUI.get(Textfield.class, "Z-Axis Position (mm)").getText()); 
+  X_Axis_Length = Integer.parseInt(HyperGUI.get(Textfield.class, "X-Axis Position (mm)").getText());
+  Y_Axis_Length = Integer.parseInt(HyperGUI.get(Textfield.class, "Y-Axis Position (mm)").getText()); 
+  Z_Axis_Length = Integer.parseInt(HyperGUI.get(Textfield.class, "Z-Axis Position (mm)").getText()); 
   
   
   // Get Velocity and X,Y,Z Spool Radius
-  int Velocity = Integer.parseInt(HyperGUI.get(Textfield.class, "Velocity").getText()); 
-  int SpoolRadX = Integer.parseInt(HyperGUI.get(Textfield.class, "X-Axis Spool Radius").getText()); 
-  int SpoolRadYZ = Integer.parseInt(HyperGUI.get(Textfield.class, "Y/Z-Axis Spool Radius").getText()); 
+  Velocity = Integer.parseInt(HyperGUI.get(Textfield.class, "Velocity").getText()); 
+  SpoolRadX = Integer.parseInt(HyperGUI.get(Textfield.class, "X-Axis Spool Radius").getText()); 
+  SpoolRadYZ = Integer.parseInt(HyperGUI.get(Textfield.class, "Y/Z-Axis Spool Radius").getText()); 
 
   // Get the Period of all the Axis Loops
-  int periodX = Integer.parseInt(HyperGUI.get(Textfield.class, "X-Period").getText()); 
-  int periodY = Integer.parseInt(HyperGUI.get(Textfield.class, "Y-Period").getText()); 
-  int periodZ = Integer.parseInt(HyperGUI.get(Textfield.class, "Z-Period").getText()); 
+  periodX = Integer.parseInt(HyperGUI.get(Textfield.class, "X-Period").getText()); 
+  periodY = Integer.parseInt(HyperGUI.get(Textfield.class, "Y-Period").getText()); 
+  periodZ = Integer.parseInt(HyperGUI.get(Textfield.class, "Z-Period").getText()); 
   
   // Add Values to JSON
   json.setInt("GoTo", 1); 
@@ -261,9 +276,7 @@ void Submit()
   json.setInt("periodZ", periodZ);
 
   clicked = 1;
-  myPort.write(json.toString());
-  
-  
+  myPort.write(json.toString()); 
 }
 
 void Calibrate()
