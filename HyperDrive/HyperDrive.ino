@@ -14,9 +14,13 @@
 #include <ArduinoJson.h>                                                // Need to include for the JsonDocument
 #include <Loom.h>                                                       // Need to include the Loom Package into the program
 
+#include "hyperJSON.h"
+
 const char* json_config =                                               // Include Configuration
 #include "config.h"
 ;
+
+
 
 int checker;                                                            // Declare a global variable for checking th correct JSON package
 
@@ -41,17 +45,22 @@ void setup() {                                                          // Put y
 
 void loop() {                                                           // Put your main code here, to run repeatedly:
 
+  hyper_Base in_data;
 
-   if(Loom.LoRa().receive_blocking(5000)){                              // If LoRa receive something, then start these statments
-    
+
+   if(Loom.LoRa().receive_blocking_raw(in_data.raw, sizeof(in_data.raw), 10000)){                              // If LoRa receive something, then start these statments
+    JsonObject internal_json = Loom.internal_json(true);
+    struct_to_json(in_data, internal_json);    
     const JsonObject coordinates_json = Loom.internal_json(false);      // Open the JSON from the code
     const JsonArray contents = coordinates_json["contents"];            // For simple syntax uses
     
-    checker = contents[0]["data"]["Bool"];                              // Update the checker value
+    checker = contents[0]["data"]["B"];                              // Update the checker value
     
     if (checker == -1){                                                 // Check if the board got the right JSON, if not, then it will move the else statement
       
     LPrintln("Got the user input Coordinate values");                   // Tell the user that we got the correct JSON
+
+    Loom.display_data();
     
     int X_Location = contents[1]["data"]["MM"];                         // Get the X_Location from JSON
     int Y_Location = contents[2]["data"]["MM"];                         // Get the Y_Location from JSON
@@ -59,12 +68,19 @@ void loop() {                                                           // Put y
     int MaxSpeed = contents[4]["data"]["Velocity"];                     // Get the MaxSpeed from JSON
     int Spool_Rad_X = contents[5]["data"]["Radius"];                    // Get the Spool_Rad_X from JSON
     int Spool_Rad_YZ = contents[6]["data"]["Radius"];                   // Get the Spool_Rad_YZ from JSON
-
+    int GoTo = contents[7]["data"]["B"];
+    int Loop = contents[8]["data"]["B"];
+    int Reset = contents[9]["data"]["B"];
+    int Calibrate = contents[10]["data"]["B"];
+    int PeriodX = contents[11]["data"]["Num"];
+    int PeriodY = contents[12]["data"]["Num"];
+    int PeriodZ = contents[13]["data"]["Num"];
+    
     Loom.pause(10000);                                                  // This is where the function that the hyperRail moves(Everything related to this function is by Liam)
     
-    contents[0]["data"]["Bool"] = 2;                                    // Update the checker value that it moved
+    contents[0]["data"]["B"] = 2;                                    // Update the checker value that it moved
 
-    for (int i = 0; i < 3; i++){                          
+    for (int i = 0; i < 10; i++){                          
       contents.remove(4);                                               // Remove MaxSpeed, Spool_Rad_x, and Spool_Rad_YZ value from the JSON
     }
     

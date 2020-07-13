@@ -98,7 +98,7 @@ void loop() {                                                                   
 
       const JsonArray contents = coordinates_json["contents"];                       // Create a JsonArray from the JSON 
       
-      checker = contents[0]["data"]["Bool"];                                         // Update the checker value
+      checker = contents[0]["data"]["B"];                                            // Update the checker value
       if(checker == 2){                                                              // Checking if we get the correct JSON Message
 
         int X_Location = contents[1]["data"]["MM"];                                  // Store X_Location value from the JSON
