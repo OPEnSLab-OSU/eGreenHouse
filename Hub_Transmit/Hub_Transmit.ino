@@ -16,7 +16,7 @@
 #include <Loom.h>                                                                 // Need to include the Loom Package into the program
 #include <ArduinoJson.h>                                                          // Need to include for the JsonDocument
 
-#include "hyperJSON.h"
+#include "hyperJSON.h"                                                            // Include the JSON Package constructor
 
 const char* json_config =                                                         // Include Configuration
 #include "config.h"
