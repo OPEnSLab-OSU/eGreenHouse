@@ -87,7 +87,7 @@ void setup() {                                                                  
 
  //attachInterrupt(digitalPinToInterrupt(X0ABump), X0A_ISR, FALLING);
 
- /* attachInterrupt(digitalPinToInterrupt(X0BBump), X0B_ISR, FALLING);
+ attachInterrupt(digitalPinToInterrupt(X0BBump), X0B_ISR, FALLING);
 
  attachInterrupt(digitalPinToInterrupt(XMaxABump), XMaxA_ISR, FALLING);
 
@@ -99,7 +99,7 @@ void setup() {                                                                  
 
  attachInterrupt(digitalPinToInterrupt(Z0Bump), Z0_ISR, FALLING);
 
- attachInterrupt(digitalPinToInterrupt(ZMaxBump), ZMax_ISR, FALLING); */
+ attachInterrupt(digitalPinToInterrupt(ZMaxBump), ZMax_ISR, FALLING); 
 
 
   X0AFlag = 0; 
@@ -159,9 +159,9 @@ void loop() {                                                                   
       Loop(); 
     }
 
-    if(Reset == 1 and calibrate == 1){
-      GoTo(X0_pos, Y0_pos, Z0_pos);   
-    }
+//    if(Reset == 1 and calibrate == 1){
+//      GoTo(X0_pos, Y0_pos, Z0_pos);   
+//    }
   // Serial.print(xAMove);
 
   // checkInts(); 
@@ -170,11 +170,11 @@ void loop() {                                                                   
  // X0AFlag = checkInts(X0AFlag, X0ABump, X0A_pos, stepperX, xMove);
 
   // if rail is not calibrated then calibrate it 
-    if(calibrate == 1){
-      Calibrate(); 
-    }
+//    if(calibrate == 1){
+//      Calibrate(); 
+//    }
 
-    
+    Loom.pause();
     contents[0]["data"]["B"] = 2;                                                                              // Update the checker value that it moved
 
     for (int i = 0; i < 10; i++){                          

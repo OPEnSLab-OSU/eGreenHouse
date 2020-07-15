@@ -91,9 +91,7 @@ void setup() {                                                                  
 void loop() {                                                                         // Put your main code here, to run repeatedly:
  
   if(Loom.LoRa().receive_blocking(10000)){
-      
-      Loom.display_data();
-      
+         
       const JsonObject coordinates_json = Loom.internal_json(false);                 // Create a new JsonObject that was received from the HyperRail
 
       const JsonArray contents = coordinates_json["contents"];                       // Create a JsonArray from the JSON 

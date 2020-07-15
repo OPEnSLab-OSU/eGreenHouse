@@ -172,12 +172,12 @@ void backwardZ() {
  void X0A_ISR()
  {
    //delay(5); 
-   /* if(digitalRead(X0ABump) == LOW)
+    if(digitalRead(X0ABump) == LOW)
    {
-   Serial.println("A0"); */
+   Serial.println("A0"); 
    X0AFlag = 1; 
-   //xAMove = 0; 
- // }
+   xAMove = 0; 
+    }
  }
 
 
