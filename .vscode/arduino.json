@@ -1,5 +1,6 @@
 {
     "board": "adafruit:samd:adafruit_feather_m0",
     "configuration": "usbstack=arduino,debug=off",
-    "port": "COM7"
+    "port": "COM5",
+    "sketch": "Hub_Receive\\Hub_Receive.ino"
 }
