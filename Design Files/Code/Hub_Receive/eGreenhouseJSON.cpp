@@ -1,4 +1,4 @@
-#include "eGreenhouseJSON.h"
+#include "eGreenHouseJSON.h"
 
 
 static bool get_data_point_from_contents(const JsonArrayConst& contents, const char* module_name, const char* data_key, float& out){
@@ -106,14 +106,8 @@ void json_to_struct(const JsonObjectConst& data, eGreenhouse_Base& out) {
     // K30
   get_data_point_from_contents(contents, "K30", "CO2", out.data.k30);
 
-    // X_Location
-   get_data_point_from_contents_int(contents, "X_Location", "MM", out.data.X);
-
-   // Y_Location
-   get_data_point_from_contents_int(contents, "Y_Location", "MM", out.data.Y);
-
-   // Z_Location
-   get_data_point_from_contents_int(contents, "Z_Location", "MM", out.data.Z);
+    // Location
+   get_data_point_from_contents_int(contents, "Location", "MM", out.data.X);
 
    // HyperRail Move Checker
    get_data_point_from_contents_int(contents, "Hyper", "Bool", out.data.done);
@@ -185,20 +179,8 @@ void struct_to_json(const eGreenhouse_Base& in, const JsonObject& out) {
 
   //X_Location
   {
-    const JsonObject data = make_module_object(contents, "X_Location");
+    const JsonObject data = make_module_object(contents, "Location");
     data["MM"] = in.data.X;
-  }
-  
-  //Y_Location
-  {
-    const JsonObject data = make_module_object(contents, "Y_Location");
-    data["MM"] = in.data.Y;
-  }
-
-    //Z_Location
-  {
-    const JsonObject data = make_module_object(contents, "Z_Location");
-    data["MM"] = in.data.Z;
   }
   // HyperRail Move Checker
   {

@@ -48,7 +48,7 @@ void loop() {                                                                   
       Loom.display_data();                                                          // Display printed new JSON formatted data on serial monitor to double check 
       const JsonObject complete_json = Loom.internal_json(false);                   // Open the JSON from code
       const JsonArray contents = complete_json["contents"];                         // For simple syntax use
-      checker = contents[7]["data"]["Bool"];                                        // Update the checker value
+      checker = contents[5]["data"]["Bool"];                                        // Update the checker value
       if(checker == 1){                                                             // If the checker value is equal to 1(It tells that it came from the eGreenhouse_Sensor_Package)
         Loom.GoogleSheets().publish();                                              // It will publish the data into GoogleSheets: check the the link in line 7
       }

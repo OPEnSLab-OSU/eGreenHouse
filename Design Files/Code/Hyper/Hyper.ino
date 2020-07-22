@@ -116,8 +116,8 @@ void loop() {                                                                   
     Loom.pause();
     contents[0]["data"]["B"] = 2;                                                                              // Update the checker value that it moved
 
-    for (int i = 0; i < 5; i++){                          
-      contents.remove(4);                                                                                      // Remove everything except x, y, z, and Hyper value from the JSON
+    for (int i = 0; i < 7; i++){                          
+      contents.remove(2);                                                                                      // Remove everything except x, y, z, and Hyper value from the JSON
     }
     
     Loom.display_data();                                                                                       // Display the new JSON to send the Sensor Package

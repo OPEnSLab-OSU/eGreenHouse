@@ -99,15 +99,11 @@ void loop() {                                                                   
       checker = contents[0]["data"]["B"];                                            // Update the checker value
       if(checker == 2){                                                              // Checking if we get the correct JSON Message
 
-        int X_Location = contents[1]["data"]["MM"];                                  // Store X_Location value from the JSON
-        int Y_Location = contents[2]["data"]["MM"];                                  // Store Y_Location value from the JSON
-        int Z_Location = contents[3]["data"]["MM"];                                  // Store Z_Location value from the JSON
+        int Location = contents[1]["data"]["MM"];                                  // Store X_Location value from the JSON
 
         Loom.measure();                                                              // Measure Sensor and Time 
         Loom.package();                                                              // Make them into a new JSOn
-        Loom.add_data("X_Location", "MM", X_Location);                               // Add X_Location to be record and send to the other board
-        Loom.add_data("Y_Location", "MM", Y_Location);                               // Add Y_Location to be record and send to the other board
-        Loom.add_data("Z_Location", "MM", Z_Location);                               // Add Z_Location to be record and send to the other board
+        Loom.add_data("X_Location", "MM", Location);                               // Add X_Location to be record and send to the other board
         Loom.add_data("Hyper", "Bool", 1);                                           // Add Hyper to tell that we moved the hyperRail and measure the sensors
                 
         Loom.display_data();                                                         // Display printed JSON formatted data on serial monitor
