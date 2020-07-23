@@ -4,7 +4,7 @@
 // It will receive package from Sensor Package to publish to GoogleSheets.
 //
 // If you want to checkout the GoogleSheets, find the link below
-// https://docs.google.com/spreadsheets/d/1M0TS0sN5z6AMDMXzh-0gRyxqf6c6dWQTrbkpmNTeRXI/edit#gid=0
+// https://docs.google.com/spreadsheets/d/1JpGKZocPMZNVpUIcMXa8LL-qB4djc1oBNfVQdpjY-qI/edit#gid=0
 //
 // Author: Kenneth Kang
 //

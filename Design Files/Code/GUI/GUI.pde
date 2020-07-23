@@ -1,5 +1,5 @@
 /*****************************************************************************************************
-** This is the eGreenhouse.pde file.                                                                **
+** This is the GUI.pde file.                                                                **
 **                                                                                                  **
 ** This will open a window box that has total of 4 input boxes, texts, a timer for 6 minutes,       **
 ** and 4 buttons.                                                                                   **
@@ -35,7 +35,7 @@ Arduino arduino;
 /****************************************
 *****Declare variable for functions******
 ****************************************/
-String port = "COM5";
+String port = "COM7";
 
 
 String GoTo = "0"; 
