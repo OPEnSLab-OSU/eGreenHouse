@@ -50,7 +50,7 @@ void loop() {                                                                   
       const JsonArray contents = complete_json["contents"];                         // For simple syntax use
       checker = contents[7]["data"]["Bool"];                                        // Update the checker value
       if(checker == 1){                                                             // If the checker value is equal to 1(It tells that it came from the eGreenhouse_Sensor_Package)
-        Loom.SpoolPublish().publish();                                              // It will publish the data into GoogleSheets: check the the link in line 7
+        Loom.Spool().publish();                                              // It will publish the data into GoogleSheets: check the the link in line 7
       }
       else{
         LPrintln("Failed to Publish to GoogleSheets");                              // Else, it will print this statement

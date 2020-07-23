@@ -174,7 +174,7 @@ void loop() {                                                                   
 //      Calibrate(); 
 //    }
 
-    Loom.pause();
+    Loom.pause(10000);
     contents[0]["data"]["B"] = 2;                                                                              // Update the checker value that it moved
 
     for (int i = 0; i < 10; i++){                          
