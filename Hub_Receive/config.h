@@ -2,7 +2,7 @@
   'general':{'name':'eGH_Hub_Receive', 'instance':1,'interval':5000},\
   'components':[\
     {'name':'Ethernet','params':['Ether1',[152,118,182,16,97,214],[192,168,0,1]]},\
-    {'name':'Spool', 'params':['Spool1', 7001, 'spool.open-sensing.org','/device/data', '/device/data', '12345']},\
+    {'name':'Spool', 'params':['Spool1', 7001, '10.0.0.84:3002','5f1f424a4ad32a0034528286','5f1f424a4ad32a0034528286', '/device/data', '12345', '-----BEGIN CERTIFICATE-----\nMIIB9zCCAZ2gAwIBAgIJAIJnPw6tgZ9wMAoGCCqGSM49BAMCMG4xCzAJBgNVBAYT\nAlVTMQ8wDQYDVQQIDAZPcmVnb24xEjAQBgNVBAcMCUNvcnZhbGxpczEZMBcGA1UE\nCgwQT3BlbiBTZW5zaW5nIExhYjEfMB0GA1UEAwwWc3Bvb2wub3Blbi1zZW5zaW5n\nLm9yZzAeFw0yMDA3MjcyMTA4MjZaFw0yMTAyMTIyMTA4MjZaMFAxCzAJBgNVBAYT\nAlVTMQ8wDQYDVQQIDAZPcmVnb24xGTAXBgNVBAoMEE9wZW4gU2Vuc2luZyBMYWIx\nFTATBgNVBAMMDFNwb29sIENsaWVudDBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IA\nBPt6C8wBQEceaW0xQabtBX65IyNs2MGV34EY8k756wosHXt9IZt8GmWmxqMiA6an\nSJcSNp5UZQnE/JJai5DxzXmjQjBAMB0GA1UdDgQWBBQwAVOGpuusT0XA35WB8kut\nZcHYJTAfBgNVHSMEGDAWgBSeNeYkOa1K90r80aipfeFpu1Ow7jAKBggqhkjOPQQD\nAgNIADBFAiEAy5fI6YBYakcgt6kW2ewTg9E6B8rzTY9GRNmK+1F+of8CIElvItZF\nrLP6HAhOnrNFAsBtbebn8ufsjEYE593snEjF\n-----END CERTIFICATE-----\n','-----BEGIN EC PRIVATE KEY-----\nMHcCAQEEIDVtFpmSrALP0vhvfLK7mxthDqnBFNOMSmVnPLdMk58QoAoGCCqGSM49\nAwEHoUQDQgAE+3oLzAFARx5pbTFBpu0FfrkjI2zYwZXfgRjyTvnrCiwde30hm3wa\nZabGoyIDpqdIlxI2nlRlCcT8klqLkPHNeQ==\n-----END EC PRIVATE KEY-----\n']},\
     {'name':'LoRa','params':[255,12,23,3,200]}\
   ]\
 }"
