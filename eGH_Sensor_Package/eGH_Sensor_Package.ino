@@ -85,7 +85,7 @@ void setup() {                                                                  
 
   LPrintln("\n ** eGreenHouse Sensor Package Ready ** ");                             // Indicating the user that setup function is complete
 
-  warmUpTimer();                                                                      // This will run the warm up the K30 sensor for 6 minutes: check line 56
+  //warmUpTimer();                                                                      // This will run the warm up the K30 sensor for 6 minutes: check line 56
 }
 
 void loop() {                                                                         // Put your main code here, to run repeatedly:
