@@ -177,7 +177,7 @@ void struct_to_json(const eGreenhouse_Base& in, const JsonObject& out) {
     data["CO2"] = in.data.k30;
   }
 
-  //X_Location
+  //Location
   {
     const JsonObject data = make_module_object(contents, "Location");
     data["MM"] = in.data.X;

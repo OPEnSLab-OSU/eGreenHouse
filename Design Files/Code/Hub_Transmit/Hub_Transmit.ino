@@ -7,9 +7,6 @@
 // As you see that you also need to run .pde file to inport user input.
 // Please take a look at that file also.
 //
-// If you want to checkout the GoogleSheets, find the link below
-// https://docs.google.com/spreadsheets/d/1M0TS0sN5z6AMDMXzh-0gRyxqf6c6dWQTrbkpmNTeRXI/edit#gid=0
-//
 // Author: Kenneth Kang
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -22,20 +19,20 @@ const char* json_config =                                                       
 #include "config.h"
 ;
 
-int Location;                                                                   // Initialize the X_Location
+int Location;                                                                     // Initialize the Location
 int MaxSpeed;                                                                     // Initialize the MaxSpeed
-int Spool_Rad;                                                                  // Initialize the Spool_Rad
+int Spool_Rad;                                                                    // Initialize the Spool_Rad
 int GoTo;                                                                         // Initialize the GoTo
 int Loop;                                                                         // Initialize the Loop
 int Reset;                                                                        // Initialize the Reset
 int Calibrate;                                                                    // Initialize the Calibrate
-int Period;                                                                      // Initialize the Period
+int Period;                                                                       // Initialize the Period
 
 LoomFactory<
-  Enable::Internet::Disabled,                                                     // For GoogleSheet in Wifi/Ethernet,we need to enabled it
+  Enable::Internet::Disabled,                                                     // For GoogleSheet in Wifi/Ethernet,we need to disabled it
   Enable::Sensors::Disabled,                                                      // For getting sensor data: We don't need it for this program
   Enable::Radios::Enabled,                                                        // For Communcation between boards
-  Enable::Actuators::Disabled,                                                    // For Motors (It will be part in the Hyperdrive)
+  Enable::Actuators::Disabled,                                                    // For Motors
   Enable::Max::Disabled                                                           // Never ever Enable this part: It will kill the program
 > ModuleFactory{};
 
@@ -60,13 +57,13 @@ void loop() {                                                                   
     hyper_Base out_struct;
     const JsonObjectConst internal_data = Loom.internal_json(false);
     json_to_struct(internal_data, out_struct);
-    Loom.LoRa().send_raw(out_struct.raw, sizeof(out_struct.raw), 6);
+    Loom.LoRa().send_raw(out_struct.raw, sizeof(out_struct.raw), 6);              // Send values to the HyperRail Code Board
                                                              
 
   }
 }
 
-void catchValue(){
+void catchValue(){                                                                // Catch values from the User Input from the GUI
     DynamicJsonDocument doc(400);                                                 // Create an DynamicJsonDocument to edit the JSON
     String JsonStr = Serial.readString();                                         // Get JSON.string() from user input from the Processing
 
@@ -91,7 +88,7 @@ void catchValue(){
     Period = doc["period"];                                                       // Get the Period from JSON
 }
 
-void setValues(){
+void setValues(){                                                                 // Update the certain values and added to the JSON Pacakge
     Loom.add_data("Hyper", "B", -1);
     Loom.add_data("Location", "MM", 0);                                           // Add Location to the JSON to be record and send to the other board
     Loom.add_data("MaxSpeed", "Velocity", 0);                                     // Add MaxSpeed to the JSON to be record and send to the other board
@@ -104,15 +101,15 @@ void setValues(){
 
 }
 
-void updateValues(){
+void updateValues(){                                                              // Update the values after the setValues function 
     const JsonObject coordinates_json = Loom.internal_json(false);                // Open the JSON from the code
     const JsonArray contents = coordinates_json["contents"];                      // For simple syntax uses
-    contents[1]["data"]["MM"] = Location;                                       // Update the X_Location value
+    contents[1]["data"]["MM"] = Location;                                         // Update the Location value
     contents[2]["data"]["Velocity"] = MaxSpeed;                                   // Update the MaxSpeed value
-    contents[3]["data"]["Radius"] = Spool_Rad;                                  // Update the Spool_Rad value
+    contents[3]["data"]["Radius"] = Spool_Rad;                                    // Update the Spool_Rad value
     contents[4]["data"]["B"] = GoTo;                                              // Update the GoTo value
     contents[5]["data"]["B"] = Loop;                                              // Update the Loop value
     contents[6]["data"]["B"] = Reset;                                             // Update the Reset value
-    contents[7]["data"]["B"] = Calibrate;                                        // Update the Calibrate value
-    contents[8]["data"]["Num"] = Period;                                         // Update the Period value
+    contents[7]["data"]["B"] = Calibrate;                                         // Update the Calibrate value
+    contents[8]["data"]["Num"] = Period;                                          // Update the Period value
 }

@@ -33,7 +33,7 @@ LoomManager Loom{ &ModuleFactory };                                             
 
 void setup() {                                                                                                 // Put your setup code here, to run once:
 
-  Serial.begin(9600);
+  Serial.begin(9600);                                                                                          // Starting from here, it will be enabling the pins for the HyperRail
 
   // axis Bump Switches 
   pinMode(N0Bump, INPUT_PULLUP); 
@@ -81,43 +81,29 @@ void loop() {                                                                   
       
     LPrintln("Got the user input Coordinate values");                                                          // Tell the user that we got the correct JSON
     
-    Location = contents[1]["data"]["MM"];                                                                   // Get the Z_Location from JSON
+    Location = contents[1]["data"]["MM"];                                                                      // Get the Location from JSON
     MaxSpeed = contents[2]["data"]["Velocity"];                                                                // Get the MaxSpeed from JSON
-    Spool_Rad = contents[3]["data"]["Radius"];                                                            // Get the Spool_Rad_YZ from JSON
+    Spool_Rad = contents[3]["data"]["Radius"];                                                                 // Get the Spool_Rad from JSON
     Goto = contents[4]["data"]["B"];                                                                           // Get the GoTo from JSON
     looP = contents[5]["data"]["B"];                                                                           // Get the Loop from JSON
     Reset = contents[6]["data"]["B"];                                                                          // Get the Reset from JSON
-    calibrate = contents[7]["data"]["B"];                                                                     // Get the Calibrate from JSON
-    period = contents[8]["data"]["Num"];                                                                     // Get the Period from JSON
+    calibrate = contents[7]["data"]["B"];                                                                      // Get the Calibrate from JSON
+    period = contents[8]["data"]["Num"];                                                                       // Get the Period from JSON
     
     int steps = mmToSteps(Location, SPR, Spool_Rad, Micro );
     if(Goto == 1){
-      GoTo(steps); 
+      GoTo(steps);                                                                                             // It will move the HyperRail
     }
     if(looP == 1){
       Loop(); 
     }
 
-//    if(Reset == 1 and calibrate == 1){
-//      GoTo(X0_pos, Y0_pos, Z0_pos);   
-//    }
-  // Serial.print(xAMove);
+    Loom.pause(10000);                                                                                         // Pause the code for 10 seconds
 
-  // checkInts(); 
-
-
- // X0AFlag = checkInts(X0AFlag, X0ABump, X0A_pos, stepperX, xMove);
-
-  // if rail is not calibrated then calibrate it 
-//    if(calibrate == 1){
-//      Calibrate(); 
-//    }
-
-    Loom.pause();
     contents[0]["data"]["B"] = 2;                                                                              // Update the checker value that it moved
 
     for (int i = 0; i < 7; i++){                          
-      contents.remove(2);                                                                                      // Remove everything except x, y, z, and Hyper value from the JSON
+      contents.remove(2);                                                                                      // Remove everything except location and Hyper value from the JSON
     }
     
     Loom.display_data();                                                                                       // Display the new JSON to send the Sensor Package

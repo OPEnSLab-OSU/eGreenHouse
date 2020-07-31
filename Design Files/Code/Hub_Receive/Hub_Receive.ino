@@ -22,7 +22,7 @@ const char* json_config =                                                       
 int checker;                                                                        // Initialize checker
 
 LoomFactory<
-  Enable::Internet::All,                                                            // For GoogleSheet in Wifi/Ethernet,we need to enabled it
+  Enable::Internet::Ethernet,                                                       // For GoogleSheet in Ethernet, we need to enabled it
   Enable::Sensors::Disabled,                                                        // For getting sensor data: We don't need it for this program
   Enable::Radios::Enabled,                                                          // For Communcation between boards
   Enable::Actuators::Disabled,                                                      // For Motors (It will be part in the Hyperdrive)
@@ -36,7 +36,7 @@ void setup() {                                                                  
   Loom.parse_config(json_config);                                                   // Getting Information in Config.h file
   Loom.print_config();                                                              // Printing out the config.h information to make sure it is running correctly or not
 
-  LPrintln("\n ** Hub Ready ** ");                                                  // Indicating the user that setup function is complete
+  LPrintln("\n ** Hub_Recieve Ready ** ");                                          // Indicating the user that setup function is complete
 
 }
 
@@ -49,7 +49,7 @@ void loop() {                                                                   
       const JsonObject complete_json = Loom.internal_json(false);                   // Open the JSON from code
       const JsonArray contents = complete_json["contents"];                         // For simple syntax use
       checker = contents[5]["data"]["Bool"];                                        // Update the checker value
-      if(checker == 1){                                                             // If the checker value is equal to 1(It tells that it came from the eGreenhouse_Sensor_Package)
+      if(checker == 1){                                                             // If the checker value is equal to 1(It tells that it came from the eGH_Sensor_Package)
         Loom.GoogleSheets().publish();                                              // It will publish the data into GoogleSheets: check the the link in line 7
       }
       else{
