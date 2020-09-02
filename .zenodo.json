@@ -42,7 +42,7 @@
         "Environmental sensing"
     ],
     "license": {
-        "id": "CERN Open Hardware License & GNU General Public License v3.0"
+        "id": "GPL3.0"
     },
     "title": "eGreenhouse: a portable, low-cost, open-source CO2 analyzer and sensor device for greenhouse applications"
 }
