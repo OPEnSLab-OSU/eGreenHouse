@@ -52,13 +52,8 @@
     "related_identifiers": [
         {
             "scheme": "url", 
-            "identifier": "https://github.com/OPEnSLab-OSU/eGreenHouse/tree/1.0.2", 
+            "identifier": "https://github.com/OPEnSLab-OSU/eGreenHouse/tree/1.0.3", 
             "relation": "isSupplementTo"
-        }, 
-        {
-            "scheme": "doi", 
-            "identifier": "10.5281/zenodo.4011185", 
-            "relation": "isVersionOf"
         }
     ]
 }
