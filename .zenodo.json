@@ -1,0 +1,48 @@
+{
+    "creators": [
+        {
+            "affiliation": "Evironmental Hydrology and Microbiology, The Zuckerberg Institute for Water Research, The Jacob Blaustein Institutes for Desert Research, Ben-Gurion University of the Negev, Israel",
+            "name": "Levintal, Elad",
+            "orcid": "0000-0002-5029-0742" 
+        },
+        {
+            "affiliation": "Openly Published Environmental Sensing (OPEnS) Lab, Department of Electrical Engineering and Computer Science, Oregon State University",
+            "name": "Kang, Kenneth"
+        },
+        {
+            "affiliation": "Openly Published Environmental Sensing (OPEnS) Lab, Oregon State University",
+            "name": "Larson, Lars"
+        },
+        {
+            "affiliation": "Openly Published Environmental Sensing (OPEnS) Lab, Oregon State University",
+            "name": "Winkelman, Eli"
+        },
+        {
+            "affiliation": "North Willamette Research and Extension Center (NWREC), Oregon State University",
+            "name": "Nackley, Lloyd"
+        },
+        {
+            "affiliation": "Evironmental Hydrology and Microbiology, The Zuckerberg Institute for Water Research, The Jacob Blaustein Institutes for Desert Research, Ben-Gurion University of the Negev, Israel",
+            "name": "Weisbrod, Noam"
+        },
+        {
+            "affiliation": "Department of Biological & Ecological Engineering, Oregon State University",
+            "name": "Selker, John S."
+        },
+        {
+            "affiliation": "Openly Published Environmental Sensing (OPEnS) Lab, Oregon State University",
+            "name": "Udell, Chester J."
+        }
+    ],
+    "description": "Advances in gas sensors and open-source hardware are enabling new options for low-cost and light-weight gas sampling devices that are also robust and easy to use and duplicate. Although the number of studies investigating these sensors has been increasing in the last few years, they are still scarce with respect to agricultural applications. Here, we present a complete system for high-accuracy measurements of temperature, relative humidity, luminosity, and CO2 concentrations. The sensor suite is integrated on the HyperRail device – a reliable, accurate, and affordable linear motion control system. All measurements are logged with a location and time-stamp. The system was assembled from only off-the-shelf or 3D printable products. We deployed the system in an agricultural greenhouse to demonstrate the system capabilities.",
+    "keywords": [
+        "CO2 sensing", 
+        "Agriculture", 
+        "Open source hardware", 
+        "Environmental sensing"
+    ],
+    "license": {
+        "id": "CERN Open Hardware License & GNU General Public License v3.0"
+    },
+    "title": "eGreenhouse: a portable, low-cost, open-source CO2 analyzer and sensor device for greenhouse applications"
+}
