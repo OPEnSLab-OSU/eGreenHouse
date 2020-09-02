@@ -44,16 +44,5 @@
     "license": {
         "id": "CERN Open Hardware License & GNU General Public License v3.0"
     },
-    "title": "eGreenhouse: a portable, low-cost, open-source CO2 analyzer and sensor device for greenhouse applications",
-    "upload_type": "software",
-    "publication_date": "2020-09-02",
-    "version": "1.0.1",
-    "access_right": "open",
-    "related_identifiers": [
-        {
-            "scheme": "url", 
-            "identifier": "https://github.com/OPEnSLab-OSU/eGreenHouse/tree/1.0.3", 
-            "relation": "isSupplementTo"
-        }
-    ]
+    "title": "eGreenhouse: a portable, low-cost, open-source CO2 analyzer and sensor device for greenhouse applications"
 }
