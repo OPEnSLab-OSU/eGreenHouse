@@ -38,12 +38,13 @@ void setup() {                                                                  
 }
 
 void loop() {                                                                       // Put your main code here, to run repeatedly:
-    if(Loom.LoRa().receive_blocking(30000)){                                        // Wait the package from the Sensor Package for 30 seconds. If not then it will not be publish
+    if(Loom.LoRa().receive_blocking(5000)){                                        // Wait the package from the Sensor Package for 30 seconds. If not then it will not be publish
       Loom.display_data();                                                          // Display printed new JSON formatted data on serial monitor to double check 
       const JsonObject complete_json = Loom.internal_json(false);                   // Open the JSON from code
       const JsonArray contents = complete_json["contents"];                         // For simple syntax use
-      checker = contents[5]["data"]["Bool"];                                        // Update the checker value
+      checker = contents[6]["data"]["Bool"];                                        // Update the checker value
       if(checker == 1){                                                             // If the checker value is equal to 1(It tells that it came from the eGH_Sensor_Package)
+                                                                                    // If local time is enable from the eGH_Sensor_Package, then set as 6, else 5 in line 45
         Loom.GoogleSheets().publish();                                              // It will publish the data into GoogleSheets: check the the link in line 7
       }
       else{

@@ -69,7 +69,14 @@ void warmUpTimer(){                                                             
 
 
 void setup() {                                                                        // Put your setup code here, to run once:
+  // Needs to be done for Hypno Board
+  pinMode(5, OUTPUT);   // Enable control of 3.3V rail 
+  pinMode(6, OUTPUT);   // Enable control of 5V rail 
 
+  //See Above
+  digitalWrite(5, LOW); // Enable 3.3V rail
+  digitalWrite(6, HIGH);  // Enable 5V rail
+  
   Serial2.begin(9600);                                                                // Start the Serial Sensor for K30
   Loom.begin_serial(true);                                                            // Start the Serial over Loom
   Loom.parse_config(json_config);                                                     // Add the config.h file into the program
@@ -80,19 +87,10 @@ void setup() {                                                                  
   pinPeripheral(12, PIO_SERCOM);
   
   Loom.K30().set_serial(&Serial2);                                                    // Set the K30 sensor using Loom (note that we need those previous step to use Loom
-
-  // Needs to be done for Hypno Board
-  pinMode(5, OUTPUT);   // Enable control of 3.3V rail 
-  pinMode(6, OUTPUT);   // Enable control of 5V rail 
-
-  //See Above
-  digitalWrite(5, LOW); // Enable 3.3V rail
-  digitalWrite(6, HIGH);  // Enable 5V rail
-
-  
+ 
   LPrintln("\n ** eGreenHouse Sensor Package Ready ** ");                             // Indicating the user that setup function is complete
 
-  warmUpTimer();                                                                      // This will run the warm up the K30 sensor for 6 minutes: check line 56
+  //warmUpTimer();                                                                      // This will run the warm up the K30 sensor for 6 minutes: check line 56
 }
 
 void loop() {                                                                         // Put your main code here, to run repeatedly:
@@ -109,7 +107,7 @@ void loop() {                                                                   
         int Location = contents[1]["data"]["MM"];                                    // Store Location value from the JSON
 
         Loom.measure();                                                              // Measure Sensor and Time 
-        Loom.package();                                                              // Make them into a new JSOn
+        Loom.package();                                                              // Make them into a new JSON
         Loom.add_data("Location", "MM", Location);                                   // Add Location to be record and send to the other board
         Loom.add_data("Hyper", "Bool", 1);                                           // Add Hyper to tell that we moved the hyperRail and measure the sensors
                 
