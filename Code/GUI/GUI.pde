@@ -35,7 +35,7 @@ Arduino arduino;
 /****************************************
 *****Declare variable for functions******
 ****************************************/
-String port = "COM7";
+String port = "COM20";
 
 
 String GoTo = "0"; 
@@ -187,10 +187,9 @@ public void timer(){
 
 void Submit()
 {
-
-  //Get length of axis and convert to ints
-  Axis_Length = Integer.parseInt(HyperGUI.get(Textfield.class, "Axis Position (mm)").getText());
   
+  //Get length of axis and convert to ints
+  Axis_Length = Integer.parseInt(HyperGUI.get(Textfield.class, "Position (mm)").getText());
   
   // Get Velocity and Spool Radius
   Velocity = Integer.parseInt(HyperGUI.get(Textfield.class, "Velocity").getText()); 
@@ -217,7 +216,7 @@ void Submit()
 void Calibrate()
 {
   //Get length of axis and convert to ints
-  Axis_Length = Integer.parseInt(HyperGUI.get(Textfield.class, "Axis Position (mm)").getText());
+  Axis_Length = Integer.parseInt(HyperGUI.get(Textfield.class, "Position (mm)").getText());
   
   
   // Get Velocity and Spool Radius
@@ -246,7 +245,7 @@ void Calibrate()
 void Reset()
 {
   //Get length of axis and convert to ints
-  Axis_Length = Integer.parseInt(HyperGUI.get(Textfield.class, "Axis Position (mm)").getText());
+  Axis_Length = Integer.parseInt(HyperGUI.get(Textfield.class, "Position (mm)").getText());
   
   
   // Get Velocity and Spool Radius
@@ -274,7 +273,7 @@ void Reset()
 void Loop()
 {
   //Get length of axis and convert to ints
-  Axis_Length = Integer.parseInt(HyperGUI.get(Textfield.class, "Axis Position (mm)").getText());
+  Axis_Length = Integer.parseInt(HyperGUI.get(Textfield.class, "Position (mm)").getText());
   
   
   // Get Velocity and Spool Radius

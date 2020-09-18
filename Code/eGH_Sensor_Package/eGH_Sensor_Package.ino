@@ -13,8 +13,8 @@
 // In that file, the order will be the following:
 // A. Device Name
 // B. Device Number
-// C. Date from RTC
-// D. Time from RTC
+// C. Date from RTC for UTC
+// D. Time from RTC for UTC
 // E. Package Number
 // F. Temperature in celsius from SHT-031(there is =-0.3 celsius error)
 // G. Humanity in % from SHT-031(there is +- 2% error) 
@@ -22,9 +22,9 @@
 // I. Infrered Lightin nm from TSL2591 
 // J. Full Spectrum Light in nm from TSL2591
 // K. CO2 value in ppm
-// L. X_Location in mm
-// M. Y_Location in mm
-// N. Z_Location in mm
+// L. Date from RTC for Local Time 
+// M. Time from RTC for Local Time
+// N. Location in mm
 // O. HyperRail Moved in Boolean
 //
 // Author: Kenneth Kang
@@ -34,8 +34,6 @@
 #include <Loom.h>                                                                     // Need to include the Loom Package into the program
 
 #include "wiring_private.h"                                                           // This .h file is for the K30 sensor
-
-#include "eGreenHouseJSON.h"                                                          // Include the JSON Package constructor
                                                                                       
 const char* json_config =                                                             // Include Configuration
 #include "config.h"
@@ -75,14 +73,23 @@ void setup() {                                                                  
   Serial2.begin(9600);                                                                // Start the Serial Sensor for K30
   Loom.begin_serial(true);                                                            // Start the Serial over Loom
   Loom.parse_config(json_config);                                                     // Add the config.h file into the program
-  Loom.print_config();                                                                // Print out the config file if it works  
+  Loom.print_config();                                                                // Print out the config file if it works
 
-                                                                                      // Assign pins 10 & 11 SERCOM functionality for K30 sensor
+                                                                                      // Assign pins 11 & 12 SERCOM functionality for K30 sensor
   pinPeripheral(11, PIO_SERCOM);
   pinPeripheral(12, PIO_SERCOM);
   
   Loom.K30().set_serial(&Serial2);                                                    // Set the K30 sensor using Loom (note that we need those previous step to use Loom
 
+  // Needs to be done for Hypno Board
+  pinMode(5, OUTPUT);   // Enable control of 3.3V rail 
+  pinMode(6, OUTPUT);   // Enable control of 5V rail 
+
+  //See Above
+  digitalWrite(5, LOW); // Enable 3.3V rail
+  digitalWrite(6, HIGH);  // Enable 5V rail
+
+  
   LPrintln("\n ** eGreenHouse Sensor Package Ready ** ");                             // Indicating the user that setup function is complete
 
   warmUpTimer();                                                                      // This will run the warm up the K30 sensor for 6 minutes: check line 56
@@ -109,10 +116,7 @@ void loop() {                                                                   
         Loom.display_data();                                                         // Display printed JSON formatted data on serial monitor
         Loom.SDCARD().log();                                                         // Log the data values (packages) into the file from SD Card
 
-        eGreenhouse_Base out_struct;                                                 // Create a new out_struct to send large size content over LoRa: Check out eGreenhouseJSON.h and eGreenhouseJSON.cpp 
-        const JsonObjectConst internal_data = Loom.internal_json(false);             // Create a new Json Object with the Sensor values
-        json_to_struct(internal_data, out_struct);                                   // Use that new Json to convert to Struct
-        Loom.LoRa().send_raw(out_struct.raw, sizeof(out_struct.raw), 12);            // Send out the Struct Data to the other Board: Check out eGreenhouse.cpp and eGreenhouse.h
+        Loom.LoRa().send(12);
       }
       else{
         LPrintln("Incorrect Message, Retrying again");                               // If the checker fails, then it will return this message, which it is fine 

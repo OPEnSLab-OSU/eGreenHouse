@@ -13,8 +13,6 @@
 #include <Loom.h>                                                                 // Need to include the Loom Package into the program
 #include <ArduinoJson.h>                                                          // Need to include for the JsonDocument
 
-#include "hyperJSON.h"                                                            // Include the JSON Package constructor
-
 const char* json_config =                                                         // Include Configuration
 #include "config.h"
 ;
@@ -54,10 +52,7 @@ void loop() {                                                                   
     setValues();                                                                  // Add values to the JSON that will be send to the other board: check line 99                                                       
     updateValues();                                                               // Update the values in the JSON: check line 116
     Loom.display_data();                                                          // Display printed new JSON formatted data on serial monitor to double check 
-    hyper_Base out_struct;
-    const JsonObjectConst internal_data = Loom.internal_json(false);
-    json_to_struct(internal_data, out_struct);
-    Loom.LoRa().send_raw(out_struct.raw, sizeof(out_struct.raw), 6);              // Send values to the HyperRail Code Board
+    Loom.LoRa().send(6);
                                                              
 
   }
@@ -80,7 +75,7 @@ void catchValue(){                                                              
     LPrintln("User Input Accepted");                                              // Telling the user that user input has accepted
     Location = doc["Location"];                                                   // Get the Location from JSON
     MaxSpeed = doc["Velocity"];                                                   // Get the MaxSpeed from JSON
-    Spool_Rad = doc["SpoolRad"];                                                  // Get the Spool_Rad from JSON
+    Spool_Rad = doc["SpoolRad"];                                                  // Geut the Spool_Rad from JSON
     GoTo = doc["GoTo"];                                                           // Get the GoTo from JSON
     Loop = doc["Loop"];                                                           // Get the Loop from JSON
     Reset = doc["Reset"];                                                         // Get the Reset from JSON

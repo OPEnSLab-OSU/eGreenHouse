@@ -103,9 +103,9 @@ void backward() {
 
  void ISR()
  {
-    if(digitalRead(Y0Bump) == LOW)
+    if(digitalRead(N0Bump) == LOW)
    {
-    Serial.println("Y0"); 
+    Serial.println("N0"); 
    N0Flag = 1;
    Move = 0; 
    }
@@ -114,11 +114,11 @@ void backward() {
 void Max_ISR()
 {
   //delay(5); 
-   if(digitalRead(YMaxBump) == LOW)
+   if(digitalRead(MaxBump) == LOW)
    {
-    Serial.println("YMax");
-  YMAXFlag = 1; 
-  yMove = 0;
+    Serial.println("Max");
+  MAXFlag = 1; 
+  Move = 0;
    }
 }
 

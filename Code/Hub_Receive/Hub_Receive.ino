@@ -12,9 +12,6 @@
 #include <Loom.h>                                                                   // Need to include the Loom Package into the program
 #include <ArduinoJson.h>                                                            // Need to include for the JsonDocument
 
-#include "eGreenhouseJSON.h"                                                        // Include the JSON Package constructor
-
-
 const char* json_config =                                                           // Include Configuration
 #include "config.h"
 ;
@@ -41,10 +38,7 @@ void setup() {                                                                  
 }
 
 void loop() {                                                                       // Put your main code here, to run repeatedly:
-    eGreenhouse_Base in_data;                                                       // Create a new struct to convert back JSON
-    if(Loom.LoRa().receive_blocking_raw(in_data.raw, sizeof(in_data.raw), 30000)){  // Wait the package from the Sensor Package for 30 seconds. If not then it will not be publish
-      JsonObject internal_json = Loom.internal_json(true);                          // Create a new JSON
-      struct_to_json(in_data, internal_json);                                       // Convert incoming struct to JSON
+    if(Loom.LoRa().receive_blocking(30000)){                                        // Wait the package from the Sensor Package for 30 seconds. If not then it will not be publish
       Loom.display_data();                                                          // Display printed new JSON formatted data on serial monitor to double check 
       const JsonObject complete_json = Loom.internal_json(false);                   // Open the JSON from code
       const JsonArray contents = complete_json["contents"];                         // For simple syntax use
