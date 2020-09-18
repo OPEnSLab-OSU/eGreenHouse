@@ -14,7 +14,7 @@
 #include <ArduinoJson.h>                                                                                       // Need to include for the JsonDocument
 #include <Loom.h>                                                                                              // Need to include the Loom Package into the program
 
-#include "hyperJSON.h"                                                                                         // Include the JSON Package constructor
+
 #include "HyperRail_Driver.h"
 
 const char* json_config =                                                                                      // Include Configuration
@@ -120,12 +120,7 @@ void setup() {                                                                  
 
 void loop() {                                                                                                  // Put your main code here, to run repeatedly:
 
-  hyper_Base in_data;
-
-
-   if(Loom.LoRa().receive_blocking_raw(in_data.raw, sizeof(in_data.raw), 10000)){                              // If LoRa receive something, then start these statments
-    JsonObject internal_json = Loom.internal_json(true);                                                       // Create a new JSON that will be converted from the struct that came
-    struct_to_json(in_data, internal_json);                                                                    // Add stuct data to JSON
+   if(Loom.LoRa().receive_blocking(10000)){                                                                    // If LoRa receive something, then start these statments
     const JsonObject coordinates_json = Loom.internal_json(false);                                             // Open the JSON from the code
     const JsonArray contents = coordinates_json["contents"];                                                   // For simple syntax uses
     

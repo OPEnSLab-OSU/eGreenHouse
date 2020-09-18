@@ -13,8 +13,8 @@
 // In that file, the order will be the following:
 // A. Device Name
 // B. Device Number
-// C. Date from RTC
-// D. Time from RTC
+// C. Date from RTC for UTC
+// D. Time from RTC for UTC
 // E. Package Number
 // F. Temperature in celsius from SHT-031(there is =-0.3 celsius error)
 // G. Humanity in % from SHT-031(there is +- 2% error) 
@@ -22,10 +22,12 @@
 // I. Infrered Lightin nm from TSL2591 
 // J. Full Spectrum Light in nm from TSL2591
 // K. CO2 value in ppm
-// L. X_Location in mm
-// M. Y_Location in mm
-// N. Z_Location in mm
-// O. HyperRail Moved in Boolean
+// L. Date from RTC for Local Time
+// M. Time from RTC for Local Time
+// N. X_Location in mm
+// O. Y_Location in mm
+// P. Z_Location in mm
+// Q. HyperRail Moved in Boolean
 //
 // Author: Kenneth Kang
 //
@@ -34,8 +36,6 @@
 #include <Loom.h>                                                                     // Need to include the Loom Package into the program
 
 #include "wiring_private.h"                                                           // This .h file is for the K30 sensor
-
-#include "eGreenhouseJSON.h"                                                          // Include the JSON Package constructor
                                                                                       
 const char* json_config =                                                             // Include Configuration
 #include "config.h"
@@ -72,6 +72,10 @@ void warmUpTimer(){                                                             
 
 void setup() {                                                                        // Put your setup code here, to run once:
 
+  pinMode(5,OUTPUT);
+  digitalWrite(5,LOW);
+  pinMode(6, OUTPUT);
+  digitalWrite(6,HIGH);
   Serial2.begin(9600);                                                                // Start the Serial Sensor for K30
   Loom.begin_serial(true);                                                            // Start the Serial over Loom
   Loom.parse_config(json_config);                                                     // Add the config.h file into the program
@@ -90,7 +94,7 @@ void setup() {                                                                  
 
 void loop() {                                                                         // Put your main code here, to run repeatedly:
  
-  if(Loom.LoRa().receive_blocking(10000)){
+  if(Loom.LoRa().receive_blocking(1000)){
          
       const JsonObject coordinates_json = Loom.internal_json(false);                 // Create a new JsonObject that was received from the HyperRail
 
@@ -113,10 +117,7 @@ void loop() {                                                                   
         Loom.display_data();                                                         // Display printed JSON formatted data on serial monitor
         Loom.SDCARD().log();                                                         // Log the data values (packages) into the file from SD Card
 
-        eGreenhouse_Base out_struct;                                                 // Create a new out_struct to send large size content over LoRa: Check out eGreenhouseJSON.h and eGreenhouseJSON.cpp 
-        const JsonObjectConst internal_data = Loom.internal_json(false);             // Create a new Json Object with the Sensor values
-        json_to_struct(internal_data, out_struct);                                   // Use that new Json to convert to Struct
-        Loom.LoRa().send_raw(out_struct.raw, sizeof(out_struct.raw), 12);            // Send out the Struct Data to the other Board: Check out eGreenhouse.cpp and eGreenhouse.h
+        Loom.LoRa().send(12);
       }
       else{
         LPrintln("Incorrect Message, Retrying again");                               // If the checker fails, then it will return this message, which it is fine 

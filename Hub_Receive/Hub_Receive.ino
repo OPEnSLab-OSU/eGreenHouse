@@ -12,9 +12,6 @@
 #include <Loom.h>                                                                   // Need to include the Loom Package into the program
 #include <ArduinoJson.h>                                                            // Need to include for the JsonDocument
 
-#include "eGreenhouseJSON.h"                                                        // Include the JSON Package constructor
-
-
 const char* json_config =                                                           // Include Configuration
 #include "config.h"
 ;
@@ -41,14 +38,11 @@ void setup() {                                                                  
 }
 
 void loop() {                                                                       // Put your main code here, to run repeatedly:
-    eGreenhouse_Base in_data;                                                       // Create a new struct to convert back JSON
-    if(Loom.LoRa().receive_blocking_raw(in_data.raw, sizeof(in_data.raw), 30000)){  // Wait the package from the Sensor Package for 30 seconds. If not then it will not be publish
-      JsonObject internal_json = Loom.internal_json(true);                          // Create a new JSON
-      struct_to_json(in_data, internal_json);                                       // Convert incoming struct to JSON
+    if(Loom.LoRa().receive_blocking(1000)){                                         // Wait the package from the Sensor Package for 1 seconds. If not then it will not be publish
       Loom.display_data();                                                          // Display printed new JSON formatted data on serial monitor to double check 
       const JsonObject complete_json = Loom.internal_json(false);                   // Open the JSON from code
       const JsonArray contents = complete_json["contents"];                         // For simple syntax use
-      checker = contents[7]["data"]["Bool"];                                        // Update the checker value
+      checker = contents[8]["data"]["Bool"];                                        // Update the checker value
       if(checker == 1){                                                             // If the checker value is equal to 1(It tells that it came from the eGreenhouse_Sensor_Package)
         Loom.GoogleSheets().publish();                                              // It will publish the data into GoogleSheets: check the the link in line 7
       }
