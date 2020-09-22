@@ -17,8 +17,7 @@
 const char* json_config =                                                                                      // Include Configuration
 #include "config.h"
 ;
-
-int checker;                                                                                                   // Declare a global variable for checking th correct JSON package
+                                                                                                   // Declare a global variable for checking th correct JSON package
 
 LoomFactory<
   Enable::Internet::Disabled,                                                                                  // For GoogleSheet in Wifi/Ethernet,we need to enabled it
@@ -63,25 +62,23 @@ void setup() {                                                                  
   LPrintln("\n ** Hyper Ready ** ");                                                                           // Indicating the user that setup function is complete
 }
 
-void loop() {                                                                                                  // Put your main code here, to run repeatedly:
-
-    if(Loom.LoRa().receive_blocking(10000)){                                                                   // If LoRa receive something, then start these statments
+void loop(){
+   if(Loom.LoRa().receive_blocking(10000)){                                                                    // If LoRa receive something, then start these statments
+    Loom.pause(1000);
     const JsonObject coordinates_json = Loom.internal_json(false);                                             // Open the JSON from the code
-    const JsonArray contents = coordinates_json["contents"];                                                   // For simple syntax uses
-    
-    checker = contents[0]["data"]["B"];                                                                        // Update the checker value
-    if (checker == -1){                                                                                        // Check if the board got the right JSON, if not, then it will move the else statement
-      
+    const char* checker = coordinates_json["id"]["name"];                                                                  // Update the checker value
+    const JsonArray contents = coordinates_json["contents"];
+    if (strcmp(checker, "Hub_Tranmit") == 0){                                                                  // Check if the board got the right JSON, if not, then it will move the else statement
     LPrintln("Got the user input Coordinate values");                                                          // Tell the user that we got the correct JSON
     
-    Location = contents[1]["data"]["MM"];                                                                      // Get the Location from JSON
-    MaxSpeed = contents[2]["data"]["Velocity"];                                                                // Get the MaxSpeed from JSON
-    Spool_Rad = contents[3]["data"]["Radius"];                                                                 // Get the Spool_Rad from JSON
-    Goto = contents[4]["data"]["B"];                                                                           // Get the GoTo from JSON
-    looP = contents[5]["data"]["B"];                                                                           // Get the Loop from JSON
-    Reset = contents[6]["data"]["B"];                                                                          // Get the Reset from JSON
-    calibrate = contents[7]["data"]["B"];                                                                      // Get the Calibrate from JSON
-    period = contents[8]["data"]["Num"];                                                                       // Get the Period from JSON
+    Location = contents[0]["data"]["MM"];                                                                      // Get the Location from JSON
+    MaxSpeed = contents[1]["data"]["Velocity"];                                                                // Get the MaxSpeed from JSON
+    Spool_Rad = contents[2]["data"]["Radius"];                                                                 // Get the Spool_Rad from JSON
+    Goto = contents[3]["data"]["B"];                                                                           // Get the GoTo from JSON
+    looP = contents[4]["data"]["B"];                                                                           // Get the Loop from JSON
+    Reset = contents[5]["data"]["B"];                                                                          // Get the Reset from JSON
+    calibrate = contents[6]["data"]["B"];                                                                      // Get the Calibrate from JSON
+    period = contents[7]["data"]["Num"];                                                                       // Get the Period from JSON
     
     int steps = mmToSteps(Location, SPR, Spool_Rad, Micro );
     if(Goto == 1){
@@ -93,11 +90,9 @@ void loop() {                                                                   
 
     Loom.pause(10000);                                                                                         // Pause the code for 10 seconds
 
-    contents[0]["data"]["B"] = 2;                                                                              // Update the checker value that it moved
-
-    for (int i = 0; i < 7; i++){                          
-      contents.remove(2);                                                                                      // Remove everything except location and Hyper value from the JSON
-    }
+    Loom.internal_json(true);
+    Loom.package();
+    Loom.add_data("Location", "MM", Location);
     
     Loom.display_data();                                                                                       // Display the new JSON to send the Sensor Package
     

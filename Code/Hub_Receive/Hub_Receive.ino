@@ -16,10 +16,8 @@ const char* json_config =                                                       
 #include "config.h"
 ;
 
-int checker;                                                                        // Initialize checker
-
 LoomFactory<
-  Enable::Internet::Ethernet,                                                       // For GoogleSheet in Ethernet, we need to enabled it
+  Enable::Internet::All,                                                            // For GoogleSheet in Ethernet, we need to enabled it
   Enable::Sensors::Disabled,                                                        // For getting sensor data: We don't need it for this program
   Enable::Radios::Enabled,                                                          // For Communcation between boards
   Enable::Actuators::Disabled,                                                      // For Motors (It will be part in the Hyperdrive)
@@ -37,18 +35,15 @@ void setup() {                                                                  
 
 }
 
-void loop() {                                                                       // Put your main code here, to run repeatedly:
-    if(Loom.LoRa().receive_blocking(5000)){                                        // Wait the package from the Sensor Package for 30 seconds. If not then it will not be publish
-      Loom.display_data();                                                          // Display printed new JSON formatted data on serial monitor to double check 
-      const JsonObject complete_json = Loom.internal_json(false);                   // Open the JSON from code
-      const JsonArray contents = complete_json["contents"];                         // For simple syntax use
-      checker = contents[6]["data"]["Bool"];                                        // Update the checker value
-      if(checker == 1){                                                             // If the checker value is equal to 1(It tells that it came from the eGH_Sensor_Package)
-                                                                                    // If local time is enable from the eGH_Sensor_Package, then set as 6, else 5 in line 45
-        Loom.GoogleSheets().publish();                                              // It will publish the data into GoogleSheets: check the the link in line 7
+void loop() {  
+  if(Loom.LoRa().receive_blocking(10000)){
+      Loom.display_data();
+      Loom.pause(1000);
+      const JsonObject complete_json = Loom.internal_json(false);
+      const char* checker = complete_json["id"]["name"];
+      if(strcmp(checker, "eGH_Package") == 0){
+        Loom.GoogleSheets().publish(complete_json);
       }
-      else{
-        LPrintln("Failed to Publish to GoogleSheets");                              // Else, it will print this statement
-      }
-   }
+  }
+  Loom.pause(1000);
 }

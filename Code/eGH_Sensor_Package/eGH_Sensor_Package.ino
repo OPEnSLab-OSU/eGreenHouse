@@ -1,4 +1,4 @@
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 // This is the eGreenHouse Sensor Package.
 // This program will get the coordinates from HyperDrive Code
@@ -39,8 +39,6 @@ const char* json_config =                                                       
 #include "config.h"
 ;
 
-int checker;                                                                          // Initialize the checker
-
 LoomFactory<
   Enable::Internet::Disabled,                                                         // For GoogleSheet in Wifi/Ethernet,we need to enabled it
   Enable::Sensors::Enabled,                                                           // For measureing data 
@@ -51,7 +49,7 @@ LoomFactory<
 
 LoomManager Loom{ &ModuleFactory };                                                   // Having all of the properties of LoomFactory<> in a manager called Loom
 
-Uart Serial2 = Uart(&sercom1, 12, 11, SERCOM_RX_PAD_3, UART_TX_PAD_0);                // Create Serial SERCOM for K30 Sensor: RX pin 12, TX pin 11
+Uart Serial2 = Uart(&sercom3, 13, 11, SERCOM_RX_PAD_1, UART_TX_PAD_0);                // Create Serial SERCOM for K30 Sensor: RX pin 13, TX pin 11
  
 void warmUpTimer(){                                                                   // This function is a timer to warm up the K30 sensor to get accurate measurements
   
@@ -69,7 +67,10 @@ void warmUpTimer(){                                                             
 
 
 void setup() {                                                                        // Put your setup code here, to run once:
-  // Needs to be done for Hypno Board
+  
+  Serial2.begin(9600);                                                                // Start the Serial Sensor for K30
+   
+    // Needs to be done for Hypno Board
   pinMode(5, OUTPUT);   // Enable control of 3.3V rail 
   pinMode(6, OUTPUT);   // Enable control of 5V rail 
 
@@ -77,22 +78,21 @@ void setup() {                                                                  
   digitalWrite(5, LOW); // Enable 3.3V rail
   digitalWrite(6, HIGH);  // Enable 5V rail
   
-  Serial2.begin(9600);                                                                // Start the Serial Sensor for K30
+  
   Loom.begin_serial(true);                                                            // Start the Serial over Loom
   Loom.parse_config(json_config);                                                     // Add the config.h file into the program
   Loom.print_config();                                                                // Print out the config file if it works
 
-                                                                                      // Assign pins 11 & 12 SERCOM functionality for K30 sensor
+                                                                                      // Assign pins 11 & 13 SERCOM functionality for K30 sensor
   pinPeripheral(11, PIO_SERCOM);
-  pinPeripheral(12, PIO_SERCOM);
+  pinPeripheral(13, PIO_SERCOM);
   
   Loom.K30().set_serial(&Serial2);                                                    // Set the K30 sensor using Loom (note that we need those previous step to use Loom
  
   LPrintln("\n ** eGreenHouse Sensor Package Ready ** ");                             // Indicating the user that setup function is complete
 
-  warmUpTimer();                                                                      // This will run the warm up the K30 sensor for 6 minutes: check line 56
+  //warmUpTimer();                                                                      // This will run the warm up the K30 sensor for 6 minutes: check line 56
 }
-
 void loop() {                                                                         // Put your main code here, to run repeatedly:
  
   if(Loom.LoRa().receive_blocking(10000)){
@@ -101,15 +101,14 @@ void loop() {                                                                   
 
       const JsonArray contents = coordinates_json["contents"];                       // Create a JsonArray from the JSON 
       
-      checker = contents[0]["data"]["B"];                                            // Update the checker value
-      if(checker == 2){                                                              // Checking if we get the correct JSON Message
+      const char* checker = coordinates_json["id"]["name"];                          // checker value
+      if(strcmp(checker, "eGH_Hyper") == 0){                                         // Checking if we get the correct JSON Message
 
         int Location = contents[1]["data"]["MM"];                                    // Store Location value from the JSON
 
         Loom.measure();                                                              // Measure Sensor and Time 
         Loom.package();                                                              // Make them into a new JSON
         Loom.add_data("Location", "MM", Location);                                   // Add Location to be record and send to the other board
-        Loom.add_data("Hyper", "Bool", 1);                                           // Add Hyper to tell that we moved the hyperRail and measure the sensors
                 
         Loom.display_data();                                                         // Display printed JSON formatted data on serial monitor
         Loom.SDCARD().log();                                                         // Log the data values (packages) into the file from SD Card
