@@ -124,9 +124,9 @@ void loop() {                                                                   
     const JsonObject coordinates_json = Loom.internal_json(false);                                             // Open the JSON from the code
     const JsonArray contents = coordinates_json["contents"];                                                   // For simple syntax uses
     
-    checker = contents[0]["data"]["B"];                                                                        // Update the checker value
+    const char* checker = coordinates_json["id"]["name"];                                                       // Update the checker value
     
-    if (checker == -1){                                                                                        // Check if the board got the right JSON, if not, then it will move the else statement
+    if (strcmp(checker, "eGH_Hub_Tranmit") == 0){                                                              // Check if the board got the right JSON, if not, then it will move the else statement
       
     LPrintln("Got the user input Coordinate values");                                                          // Tell the user that we got the correct JSON
     
@@ -170,11 +170,12 @@ void loop() {                                                                   
 //    }
 
     Loom.pause();
-    contents[0]["data"]["B"] = 2;                                                                              // Update the checker value that it moved
-
-    for (int i = 0; i < 10; i++){                          
-      contents.remove(4);                                                                                      // Remove everything except x, y, z, and Hyper value from the JSON
-    }
+   
+    Loom.internal_json(true);                                                                                  // Clear the internal_json from Loom
+    Loom.package();                                                                                            // Create the Meta data for the json
+    Loom.add_data("X_Location", "MM", X_Location);                                                             // Add X_Location to the JSON to be record and send to the other board
+    Loom.add_data("Y_Location", "MM", Y_Location);                                                             // Add Y_Location to the JSON to be record and send to the other board
+    Loom.add_data("Z_Location", "MM", Z_Location);                                                             // Add Z_Location to the JSON to be record and send to the other board
     
     Loom.display_data();                                                                                       // Display the new JSON to send the Sensor Package
     

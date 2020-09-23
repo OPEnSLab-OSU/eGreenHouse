@@ -27,7 +27,9 @@
 // N. X_Location in mm
 // O. Y_Location in mm
 // P. Z_Location in mm
-// Q. HyperRail Moved in Boolean
+//
+// Note that sometimes the K30 sensor doesn't work with the Hypnos. 
+// Because of that, you want to run the Basic Loom code in the examples 
 //
 // Author: Kenneth Kang
 //
@@ -41,8 +43,6 @@ const char* json_config =                                                       
 #include "config.h"
 ;
 
-int checker;                                                                          // Initialize the checker
-
 LoomFactory<
   Enable::Internet::Disabled,                                                         // For GoogleSheet in Wifi/Ethernet,we need to enabled it
   Enable::Sensors::Enabled,                                                           // For measureing data 
@@ -53,7 +53,7 @@ LoomFactory<
 
 LoomManager Loom{ &ModuleFactory };                                                   // Having all of the properties of LoomFactory<> in a manager called Loom
 
-Uart Serial2 = Uart(&sercom1, 12, 11, SERCOM_RX_PAD_3, UART_TX_PAD_0);                // Create Serial SERCOM for K30 Sensor: RX pin 12, TX pin 11
+Uart Serial2 = Uart(&sercom1, 13, 11, SERCOM_RX_PAD_1, UART_TX_PAD_0);                // Create Serial SERCOM for K30 Sensor: RX pin 12, TX pin 11
  
 void warmUpTimer(){                                                                   // This function is a timer to warm up the K30 sensor to get accurate measurements
   
@@ -72,18 +72,21 @@ void warmUpTimer(){                                                             
 
 void setup() {                                                                        // Put your setup code here, to run once:
 
-  pinMode(5,OUTPUT);
+
+  Serial2.begin(9600);                                                                // Start the Serial Sensor for K30
+  
+  pinMode(5,OUTPUT);                                                                  // Activate pins for Hypnos board
   digitalWrite(5,LOW);
   pinMode(6, OUTPUT);
   digitalWrite(6,HIGH);
-  Serial2.begin(9600);                                                                // Start the Serial Sensor for K30
+  
   Loom.begin_serial(true);                                                            // Start the Serial over Loom
   Loom.parse_config(json_config);                                                     // Add the config.h file into the program
   Loom.print_config();                                                                // Print out the config file if it works  
 
                                                                                       // Assign pins 10 & 11 SERCOM functionality for K30 sensor
   pinPeripheral(11, PIO_SERCOM);
-  pinPeripheral(12, PIO_SERCOM);
+  pinPeripheral(13, PIO_SERCOM);
   
   Loom.K30().set_serial(&Serial2);                                                    // Set the K30 sensor using Loom (note that we need those previous step to use Loom
 
@@ -98,10 +101,11 @@ void loop() {                                                                   
          
       const JsonObject coordinates_json = Loom.internal_json(false);                 // Create a new JsonObject that was received from the HyperRail
 
-      const JsonArray contents = coordinates_json["contents"];                       // Create a JsonArray from the JSON 
+      const JsonArray contents = coordinates_json["contents"];                       // Create a JsonArray from the JSON
+
+      const char* checker = coordinates_json["id"]["name"];                          // Make sure if the board received the correct package
       
-      checker = contents[0]["data"]["B"];                                            // Update the checker value
-      if(checker == 2){                                                              // Checking if we get the correct JSON Message
+      if(strcmp(checker, "eGH_Hyper") == 0){                                         // Checking if we get the correct JSON Message
 
         int X_Location = contents[1]["data"]["MM"];                                  // Store X_Location value from the JSON
         int Y_Location = contents[2]["data"]["MM"];                                  // Store Y_Location value from the JSON
@@ -112,7 +116,6 @@ void loop() {                                                                   
         Loom.add_data("X_Location", "MM", X_Location);                               // Add X_Location to be record and send to the other board
         Loom.add_data("Y_Location", "MM", Y_Location);                               // Add Y_Location to be record and send to the other board
         Loom.add_data("Z_Location", "MM", Z_Location);                               // Add Z_Location to be record and send to the other board
-        Loom.add_data("Hyper", "Bool", 1);                                           // Add Hyper to tell that we moved the hyperRail and measure the sensors
                 
         Loom.display_data();                                                         // Display printed JSON formatted data on serial monitor
         Loom.SDCARD().log();                                                         // Log the data values (packages) into the file from SD Card
@@ -128,5 +131,3 @@ void loop() {                                                                   
 void SERCOM1_Handler()  {                                                             // This function needs for K30
   Serial2.IrqHandler();
 }
-
-// Need to consider: update the RTC and Radio communication method 

@@ -16,8 +16,6 @@ const char* json_config =                                                       
 #include "config.h"
 ;
 
-int checker;                                                                        // Initialize checker
-
 LoomFactory<
   Enable::Internet::All,                                                            // For GoogleSheet in Wifi/Ethernet,we need to enabled it
   Enable::Sensors::Disabled,                                                        // For getting sensor data: We don't need it for this program
@@ -42,8 +40,8 @@ void loop() {                                                                   
       Loom.display_data();                                                          // Display printed new JSON formatted data on serial monitor to double check 
       const JsonObject complete_json = Loom.internal_json(false);                   // Open the JSON from code
       const JsonArray contents = complete_json["contents"];                         // For simple syntax use
-      checker = contents[8]["data"]["Bool"];                                        // Update the checker value
-      if(checker == 1){                                                             // If the checker value is equal to 1(It tells that it came from the eGreenhouse_Sensor_Package)
+      const char* checker = complete_json["id"]["name"];                             // Add a new variable called checker to make sure if the board got the correct package
+      if(strcmp(checker, "eGH_Package")){                                           // Check if the board got the correct package
         Loom.GoogleSheets().publish();                                              // It will publish the data into GoogleSheets: check the the link in line 7
       }
       else{

@@ -97,7 +97,7 @@ void catchValue(){
 }
 
 void setValues(){
-    Loom.add_data("Hyper", "B", -1);
+    Loom.package();                                                               // Add Meta data into the JSON
     Loom.add_data("X_Location", "MM", 0);                                         // Add X_Location to the JSON to be record and send to the other board
     Loom.add_data("Y_Location", "MM", 0);                                         // Add Y_Location to the JSON to be record and send to the other board
     Loom.add_data("Z_Location", "MM", 0);                                         // Add Z_Location to the JSON to be record and send to the other board
