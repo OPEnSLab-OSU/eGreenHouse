@@ -84,7 +84,7 @@ void catchValue(){                                                              
 }
 
 void setValues(){                                                                 // Update the certain values and added to the JSON Pacakge
-    Loom.package();
+    Loom.package();                                                               // Add the Meta data into JSON
     Loom.add_data("Location", "MM", 0);                                           // Add Location to the JSON to be record and send to the other board
     Loom.add_data("MaxSpeed", "Velocity", 0);                                     // Add MaxSpeed to the JSON to be record and send to the other board
     Loom.add_data("Spool_Rad", "Radius", 0);                                      // Add Spool_Rad to the JSON to be record and send to the other board

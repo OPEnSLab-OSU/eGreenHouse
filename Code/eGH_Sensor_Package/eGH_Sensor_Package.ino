@@ -25,9 +25,13 @@
 // L. Date from RTC for Local Time 
 // M. Time from RTC for Local Time
 // N. Location in mm
-// O. HyperRail Moved in Boolean
 //
 // Author: Kenneth Kang
+//
+//
+// Somehow the code sometimes doesn't work properly, even though the code works completely fine. 
+// Therefore, you might want to complie the Basic Loom code before compling this code
+//
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -49,7 +53,7 @@ LoomFactory<
 
 LoomManager Loom{ &ModuleFactory };                                                   // Having all of the properties of LoomFactory<> in a manager called Loom
 
-Uart Serial2 = Uart(&sercom3, 13, 11, SERCOM_RX_PAD_1, UART_TX_PAD_0);                // Create Serial SERCOM for K30 Sensor: RX pin 13, TX pin 11
+Uart Serial2 = Uart(&sercom1, 13, 11, SERCOM_RX_PAD_1, UART_TX_PAD_0);                // Create Serial SERCOM for K30 Sensor: RX pin 13, TX pin 11
  
 void warmUpTimer(){                                                                   // This function is a timer to warm up the K30 sensor to get accurate measurements
   
@@ -62,7 +66,7 @@ void warmUpTimer(){                                                             
     LPrint("\n");
   }
   
-  LPrintln("\n ** Ready to Measure ** ");
+  LPrintln("\n ** Ready to Measure ** ");                                             // Let the user know that eGH_Sensor_Package is ready for measurements
 }
 
 
@@ -70,13 +74,13 @@ void setup() {                                                                  
   
   Serial2.begin(9600);                                                                // Start the Serial Sensor for K30
    
-    // Needs to be done for Hypno Board
-  pinMode(5, OUTPUT);   // Enable control of 3.3V rail 
-  pinMode(6, OUTPUT);   // Enable control of 5V rail 
+  // Needs to be done for Hypno Board
+  pinMode(5, OUTPUT);                                                                 // Enable control of 3.3V rail 
+  pinMode(6, OUTPUT);                                                                 // Enable control of 5V rail 
 
   //See Above
-  digitalWrite(5, LOW); // Enable 3.3V rail
-  digitalWrite(6, HIGH);  // Enable 5V rail
+  digitalWrite(5, LOW);                                                               // Enable 3.3V rail
+  digitalWrite(6, HIGH);                                                              // Enable 5V rail
   
   
   Loom.begin_serial(true);                                                            // Start the Serial over Loom
@@ -91,7 +95,7 @@ void setup() {                                                                  
  
   LPrintln("\n ** eGreenHouse Sensor Package Ready ** ");                             // Indicating the user that setup function is complete
 
-  //warmUpTimer();                                                                      // This will run the warm up the K30 sensor for 6 minutes: check line 56
+  warmUpTimer();                                                                      // This will run the warm up the K30 sensor for 6 minutes: check line 56
 }
 void loop() {                                                                         // Put your main code here, to run repeatedly:
  

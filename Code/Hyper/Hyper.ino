@@ -5,6 +5,9 @@
 // then move to that location with that speed and rotation.  
 // then send only Location, and HyperRail Movement Status to eGreenhouse Sensor Package.
 //
+// While Hyper.ino and config.h is for Radio communcation
+// HyperRail_Driver.cpp and HyperRail_Driver.h is for the HyperRail movement code
+//
 // Author: Kenneth Kang
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -64,10 +67,10 @@ void setup() {                                                                  
 
 void loop(){
    if(Loom.LoRa().receive_blocking(10000)){                                                                    // If LoRa receive something, then start these statments
-    Loom.pause(1000);
+    Loom.pause(1000);                                                                                          // Wait for a second to get all the package that was sent
     const JsonObject coordinates_json = Loom.internal_json(false);                                             // Open the JSON from the code
-    const char* checker = coordinates_json["id"]["name"];                                                                  // Update the checker value
-    const JsonArray contents = coordinates_json["contents"];
+    const JsonArray contents = coordinates_json["contents"];                                                   // For simple name for later usage
+    const char* checker = coordinates_json["id"]["name"];                                                      // Update the checker value to make sure if board got the correct package
     if (strcmp(checker, "Hub_Tranmit") == 0){                                                                  // Check if the board got the right JSON, if not, then it will move the else statement
     LPrintln("Got the user input Coordinate values");                                                          // Tell the user that we got the correct JSON
     
@@ -90,9 +93,9 @@ void loop(){
 
     Loom.pause(10000);                                                                                         // Pause the code for 10 seconds
 
-    Loom.internal_json(true);
-    Loom.package();
-    Loom.add_data("Location", "MM", Location);
+    Loom.internal_json(true);                                                                                  // Reset the internal_json as empty
+    Loom.package();                                                                                            // Add the Meta data into the internal_json
+    Loom.add_data("Location", "MM", Location);                                                                 // Add Location variable to the internal_json
     
     Loom.display_data();                                                                                       // Display the new JSON to send the Sensor Package
     

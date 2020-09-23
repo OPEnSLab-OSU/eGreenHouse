@@ -36,14 +36,14 @@ void setup() {                                                                  
 }
 
 void loop() {  
-  if(Loom.LoRa().receive_blocking(10000)){
-      Loom.display_data();
-      Loom.pause(1000);
-      const JsonObject complete_json = Loom.internal_json(false);
-      const char* checker = complete_json["id"]["name"];
-      if(strcmp(checker, "eGH_Package") == 0){
-        Loom.GoogleSheets().publish(complete_json);
+  if(Loom.LoRa().receive_blocking(10000)){                                          // Wait for a package for 10 seconds, if not try again
+      Loom.pause(1000);                                                             // Pause for getting all the data from the pacakge
+      Loom.display_data();                                                          // Display the data what was send from eGH_Sensor_Pacakge
+      const JsonObject complete_json = Loom.internal_json(false);                   // Set a new variable called complete_json
+      const char* checker = complete_json["id"]["name"];                            // Set a new variable called checker to make sure if check the correct package
+      if(strcmp(checker, "eGH_Package") == 0){                                      // If the package is correct, publish to GoogleSheets
+        Loom.GoogleSheets().publish(complete_json);                                 // The link will be provided above
       }
   }
-  Loom.pause(1000);
+  Loom.pause(1000);                                                                 // Wait for a cooldown time for waiting mode for a second
 }
