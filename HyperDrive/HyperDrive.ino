@@ -14,7 +14,7 @@
 #include <ArduinoJson.h>                                                                                       // Need to include for the JsonDocument
 #include <Loom.h>                                                                                              // Need to include the Loom Package into the program
 
-#include "hyperJSON.h"                                                                                         // Include the JSON Package constructor
+
 #include "HyperRail_Driver.h"
 
 const char* json_config =                                                                                      // Include Configuration
@@ -120,18 +120,13 @@ void setup() {                                                                  
 
 void loop() {                                                                                                  // Put your main code here, to run repeatedly:
 
-  hyper_Base in_data;
-
-
-   if(Loom.LoRa().receive_blocking_raw(in_data.raw, sizeof(in_data.raw), 10000)){                              // If LoRa receive something, then start these statments
-    JsonObject internal_json = Loom.internal_json(true);                                                       // Create a new JSON that will be converted from the struct that came
-    struct_to_json(in_data, internal_json);                                                                    // Add stuct data to JSON
+   if(Loom.LoRa().receive_blocking(10000)){                                                                    // If LoRa receive something, then start these statments
     const JsonObject coordinates_json = Loom.internal_json(false);                                             // Open the JSON from the code
     const JsonArray contents = coordinates_json["contents"];                                                   // For simple syntax uses
     
-    checker = contents[0]["data"]["B"];                                                                        // Update the checker value
+    const char* checker = coordinates_json["id"]["name"];                                                       // Update the checker value
     
-    if (checker == -1){                                                                                        // Check if the board got the right JSON, if not, then it will move the else statement
+    if (strcmp(checker, "eGH") == 0){                                                              // Check if the board got the right JSON, if not, then it will move the else statement
       
     LPrintln("Got the user input Coordinate values");                                                          // Tell the user that we got the correct JSON
     
@@ -152,34 +147,33 @@ void loop() {                                                                   
     int xsteps = mmToSteps(X_Location, X_SPR, Spool_Rad_X, X_Micro );
     int ysteps = mmToSteps(Y_Location, YZ_SPR, Spool_Rad_YZ, YZ_Micro );
     int zsteps = mmToSteps(Z_Location, YZ_SPR, Spool_Rad_YZ, YZ_Micro );
-    if(Goto == 1){
-      GoTo(xsteps, ysteps, zsteps); 
-    }
-    if(looP == 1){
-      Loop(); 
-    }
-
-//    if(Reset == 1 and calibrate == 1){
-//      GoTo(X0_pos, Y0_pos, Z0_pos);   
+//    if(Goto == 1){
+//      GoTo(xsteps, ysteps, zsteps); 
 //    }
-  // Serial.print(xAMove);
-
-  // checkInts(); 
-
-
- // X0AFlag = checkInts(X0AFlag, X0ABump, X0A_pos, stepperX, xMove);
-
-  // if rail is not calibrated then calibrate it 
-//    if(calibrate == 1){
-//      Calibrate(); 
+//    if(looP == 1){
+//      Loop(); 
 //    }
-
-    Loom.pause(10000);
-    contents[0]["data"]["B"] = 2;                                                                              // Update the checker value that it moved
-
-    for (int i = 0; i < 10; i++){                          
-      contents.remove(4);                                                                                      // Remove everything except x, y, z, and Hyper value from the JSON
-    }
+//
+////    if(Reset == 1 and calibrate == 1){
+////      GoTo(X0_pos, Y0_pos, Z0_pos);   
+////    }
+//  // Serial.print(xAMove);
+//
+//  // checkInts(); 
+//
+//
+// // X0AFlag = checkInts(X0AFlag, X0ABump, X0A_pos, stepperX, xMove);
+//
+//  // if rail is not calibrated then calibrate it 
+////    if(calibrate == 1){
+////      Calibrate(); 
+////    }
+    Loom.pause(1000);
+    Loom.internal_json(true);                                                                                  // Clear the internal_json from Loom
+    Loom.package();                                                                                            // Create the Meta data for the json
+    Loom.add_data("X_Location", "MM", X_Location);                                                             // Add X_Location to the JSON to be record and send to the other board
+    Loom.add_data("Y_Location", "MM", Y_Location);                                                             // Add Y_Location to the JSON to be record and send to the other board
+    Loom.add_data("Z_Location", "MM", Z_Location);                                                             // Add Z_Location to the JSON to be record and send to the other board
     
     Loom.display_data();                                                                                       // Display the new JSON to send the Sensor Package
     
