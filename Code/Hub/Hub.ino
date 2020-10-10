@@ -1,8 +1,12 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
-// This is the Hub_Transmit.
+// This is the Hub.
 // This program will get take user input from Processing GUI that we made
 // then send those values to the HyperDrive to move them.
+//
+// At the same time, it will upload sensor values to GoogleSheets
+// If you want to checkout the GoogleSheets, find the link below
+// https://docs.google.com/spreadsheets/d/1JpGKZocPMZNVpUIcMXa8LL-qB4djc1oBNfVQdpjY-qI/edit#gid=0
 //
 // As you see that you also need to run .pde file to inport user input.
 // Please take a look at that file also.
@@ -25,9 +29,10 @@ int Loop;                                                                       
 int Reset;                                                                        // Initialize the Reset
 int Calibrate;                                                                    // Initialize the Calibrate
 int Period;                                                                       // Initialize the Period
+bool Processing;                                                                  // Initialize Processing for pending the process or not
 
 LoomFactory<
-  Enable::Internet::Disabled,                                                     // For GoogleSheet in Wifi/Ethernet,we need to disabled it
+  Enable::Internet::Ethernet,                                                     // For GoogleSheet in Wifi/Ethernet,we need to disabled it
   Enable::Sensors::Disabled,                                                      // For getting sensor data: We don't need it for this program
   Enable::Radios::Enabled,                                                        // For Communcation between boards
   Enable::Actuators::Disabled,                                                    // For Motors
@@ -47,14 +52,33 @@ void setup() {                                                                  
 
 void loop() {                                                                     // Put your main code here, to run repeatedly:
 
+  if(Processing == true){                                                         // If it is waiting for a response, it will run this pass this if statement
+    while(Loom.LoRa().receive_blocking(30000)){                                   // While the board waits maxium 30 seconds for response of package
+      if(Serial.available()){                                                     // However, if user press another request, then this will pop up
+        LPrintln("Please wait until it uploads data to GoogleSheets");
+      }
+   const JsonObject complete_json = Loom.internal_json(false);                    // Get the full JSON
+   const char* checker = complete_json["id"]["name"];                             // Initialize checker value if the board got the right package
+      if(strcmp(checker, "eGH_Package") == 0){                                    // If the JSON package is correct, then it will run this if statement
+        Loom.GoogleSheets().publish();                                            // Publish the JSON to GoogleSheets
+        Processing = false;                                                       // Change back for waiting new response
+        LPrintln("Ready");                                                        // Let the user know that the board is ready for new input
+        break;                                                                    // Escape the while loop
+      }
+      else if(strcmp(checker, "eGH_Package") != 0){                               // If the package is not correctly received 
+        Loom.internal_json(true);                                                 // Then it will delete it 
+      }
+    }
+  }
+  
   if(Serial.available()){                                                         // Read Json Object from Processing                                                
     catchValue();                                                                 // Catch values from the User Input: Check line 69
     setValues();                                                                  // Add values to the JSON that will be send to the other board: check line 99                                                       
     updateValues();                                                               // Update the values in the JSON: check line 116
     Loom.display_data();                                                          // Display printed new JSON formatted data on serial monitor to double check 
-    Loom.LoRa().send(6);
-                                                             
-
+    Processing = true;                                                            // Convert that it is pending for measuring/movment 
+    Loom.LoRa().send(6);                                                          // Send the coordinates to the other board
+    LPrintln("Please Wait");                                                      // Let the user that you need to wait to request a new coordinate value
   }
 }
 
@@ -75,7 +99,7 @@ void catchValue(){                                                              
     LPrintln("User Input Accepted");                                              // Telling the user that user input has accepted
     Location = doc["Location"];                                                   // Get the Location from JSON
     MaxSpeed = doc["Velocity"];                                                   // Get the MaxSpeed from JSON
-    Spool_Rad = doc["SpoolRad"];                                                  // Geut the Spool_Rad from JSON
+    Spool_Rad = doc["SpoolRad"];                                                  // Get the Spool_Rad from JSON
     GoTo = doc["GoTo"];                                                           // Get the GoTo from JSON
     Loop = doc["Loop"];                                                           // Get the Loop from JSON
     Reset = doc["Reset"];                                                         // Get the Reset from JSON

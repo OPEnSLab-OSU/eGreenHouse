@@ -22,9 +22,7 @@
 // I. Infrered Lightin nm from TSL2591 
 // J. Full Spectrum Light in nm from TSL2591
 // K. CO2 value in ppm
-// L. Date from RTC for Local Time 
-// M. Time from RTC for Local Time
-// N. Location in mm
+// L. Location in mm
 //
 // Author: Kenneth Kang
 //
@@ -110,7 +108,7 @@ void loop() {                                                                   
         Loom.display_data();                                                         // Display printed JSON formatted data on serial monitor
         Loom.SDCARD().log();                                                         // Log the data values (packages) into the file from SD Card
 
-        Loom.LoRa().send(12);
+        Loom.LoRa().send(9);                                                         // Send back to the Hub
       }
       else{
         LPrintln("Incorrect Message, Retrying again");                               // If the checker fails, then it will return this message, which it is fine 
