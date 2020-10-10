@@ -123,10 +123,10 @@ void loop() {                                                                   
    if(Loom.LoRa().receive_blocking(10000)){                                                                    // If LoRa receive something, then start these statments
     const JsonObject coordinates_json = Loom.internal_json(false);                                             // Open the JSON from the code
     const JsonArray contents = coordinates_json["contents"];                                                   // For simple syntax uses
+    s
+    const char* checker = coordinates_json["id"]["name"];                                                      // Update the checker value
     
-    const char* checker = coordinates_json["id"]["name"];                                                       // Update the checker value
-    
-    if (strcmp(checker, "eGH") == 0){                                                              // Check if the board got the right JSON, if not, then it will move the else statement
+    if (strcmp(checker, "eGH") == 0){                                                                          // Check if the board got the right JSON, if not, then it will move the else statement
       
     LPrintln("Got the user input Coordinate values");                                                          // Tell the user that we got the correct JSON
     

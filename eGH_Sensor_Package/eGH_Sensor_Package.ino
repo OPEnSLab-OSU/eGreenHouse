@@ -48,12 +48,12 @@ LoomFactory<
   Enable::Sensors::Enabled,                                                           // For measureing data 
   Enable::Radios::Enabled,                                                            // For Communcation between boards
   Enable::Actuators::Disabled,                                                        // For Enabling Motors & Relay (one-pin)
-  Enable::Max::Disabled                                                               // Never ever Enable this part: It will kill the program
+  Enable::Max::Disabled                                                               
 > ModuleFactory{};
 
 LoomManager Loom{ &ModuleFactory };                                                   // Having all of the properties of LoomFactory<> in a manager called Loom
 
-Uart Serial2 = Uart(&sercom1, 13, 11, SERCOM_RX_PAD_1, UART_TX_PAD_0);                // Create Serial SERCOM for K30 Sensor: RX pin 12, TX pin 11
+Uart Serial2 = Uart(&sercom1, 13, 11, SERCOM_RX_PAD_1, UART_TX_PAD_0);                // Create Serial SERCOM for K30 Sensor: RX pin 13, TX pin 11
  
 void warmUpTimer(){                                                                   // This function is a timer to warm up the K30 sensor to get accurate measurements
   
@@ -66,7 +66,7 @@ void warmUpTimer(){                                                             
     LPrint("\n");
   }
   
-  LPrintln("\n ** Ready to Measure ** ");
+  LPrintln("\n ** Ready to Measure ** ");                                             // Letting the user that K30 warm up time is complete
 }
 
 
@@ -84,7 +84,7 @@ void setup() {                                                                  
   Loom.parse_config(json_config);                                                     // Add the config.h file into the program
   Loom.print_config();                                                                // Print out the config file if it works  
 
-                                                                                      // Assign pins 10 & 11 SERCOM functionality for K30 sensor
+                                                                                      // Assign pins 13 & 11 SERCOM functionality for K30 sensor
   pinPeripheral(11, PIO_SERCOM);
   pinPeripheral(13, PIO_SERCOM);
   
@@ -112,7 +112,7 @@ void loop() {                                                                   
         int Z_Location = contents[3]["data"]["MM"];                                  // Store Z_Location value from the JSON
 
         Loom.measure();                                                              // Measure Sensor and Time 
-        Loom.package();                                                              // Make them into a new JSOn
+        Loom.package();                                                              // Make them into a new JSON
         Loom.add_data("X_Location", "MM", X_Location);                               // Add X_Location to be record and send to the other board
         Loom.add_data("Y_Location", "MM", Y_Location);                               // Add Y_Location to be record and send to the other board
         Loom.add_data("Z_Location", "MM", Z_Location);                               // Add Z_Location to be record and send to the other board
@@ -120,7 +120,7 @@ void loop() {                                                                   
         Loom.display_data();                                                         // Display printed JSON formatted data on serial monitor
         Loom.SDCARD().log();                                                         // Log the data values (packages) into the file from SD Card
 
-        Loom.LoRa().send(3);
+        Loom.LoRa().send(3);                                                         // Send back to the Hub
       }
       else{
         LPrintln("Incorrect Message, Retrying again");                               // If the checker fails, then it will return this message, which it is fine 

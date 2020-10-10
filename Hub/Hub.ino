@@ -50,41 +50,39 @@ void setup() {                                                                  
   Loom.parse_config(json_config);                                                 // Getting Information in Config.h file
   Loom.print_config();                                                            // Printing out the config.h information to make sure it is running correctly or not
 
-  LPrintln("\n ** Hub Ready ** ");                                       // Indicating the user that setup function is complete
+  LPrintln("\n ** Hub Ready ** ");                                                // Indicating the user that setup function is complete
 
 }
 
 void loop() {                                                                     // Put your main code here, to run repeatedly:
 
-  if(Processing == true){
-    while(Loom.LoRa().receive_blocking(30000)){
-      if(Serial.available()){
+  if(Processing == true){                                                         // If it is waiting for a response, it will run this pass this if statement
+    while(Loom.LoRa().receive_blocking(30000)){                                   // While the board waits maxium 30 seconds for response of package
+      if(Serial.available()){                                                     // However, if user press another request, then this will pop up
         LPrintln("Please wait until it uploads data to GoogleSheets");
       }
-   const JsonObject complete_json = Loom.internal_json(false);
-   const char* checker = complete_json["id"]["name"];
-   Loom.pause(1000);
-   Loom.display_data();
-      if(strcmp(checker, "eGH_Package") == 0){
-        Loom.display_data();
-        Loom.GoogleSheets().publish();
-        Processing = false;
-        LPrintln("Ready");
-        break; 
+   const JsonObject complete_json = Loom.internal_json(false);                    // Get the full JSON
+   const char* checker = complete_json["id"]["name"];                             // Initialize checker value if the board got the right package
+      if(strcmp(checker, "eGH_Package") == 0){                                    // If the JSON package is correct, then it will run this if statement
+        Loom.GoogleSheets().publish();                                            // Publish the JSON to GoogleSheets
+        Processing = false;                                                       // Change back for waiting new response
+        LPrintln("Ready");                                                        // Let the user know that the board is ready for new input
+        break;                                                                    // Escape the while loop
       }
-      else if(strcmp(checker, "eGH_Package") != 0){
-        Loom.internal_json(true);
+      else if(strcmp(checker, "eGH_Package") != 0){                               // If the package is not correctly received 
+        Loom.internal_json(true);                                                 // Then it will delete it 
       }
     }
   }
   
-  if(Serial.available()){                                                          // Read Json Object from Processing                                                
+  if(Serial.available()){                                                         // Read Json Object from Processing                                                
     catchValue();                                                                 // Catch values from the User Input: Check line 69
     setValues();                                                                  // Add values to the JSON that will be send to the other board: check line 99                                                       
     updateValues();                                                               // Update the values in the JSON: check line 116
     Loom.display_data();                                                          // Display printed new JSON formatted data on serial monitor to double check 
-    Processing = true;
-    Loom.LoRa().send(6);                                                       
+    Processing = true;                                                            // Convert that it is pending for measuring/movment 
+    Loom.LoRa().send(6);                                                          // Send the coordinates to the other board
+    LPrintln("Please Wait");                                                      // Let the user that you need to wait to request a new coordinate value
   }
 
 }
