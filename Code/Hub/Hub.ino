@@ -4,9 +4,10 @@
 // This program will get take user input from Processing GUI that we made
 // then send those values to the HyperDrive to move them.
 //
-// At the same time, it will upload sensor values to GoogleSheets
-// If you want to checkout the GoogleSheets, find the link below
-// https://docs.google.com/spreadsheets/d/1JpGKZocPMZNVpUIcMXa8LL-qB4djc1oBNfVQdpjY-qI/edit#gid=0
+// We will be uploading data over GoogleSheets. 
+// There is a special instructions to setup GoogleSheets with this code.
+// You can find a setup guide either from the paper or the following link
+// https://github.com/OPEnSLab-OSU/Loom/wiki/Using-Loom-with-Google-Sheets
 //
 // As you see that you also need to run .pde file to inport user input.
 // Please take a look at that file also.

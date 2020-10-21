@@ -1,5 +1,5 @@
 /*****************************************************************************************************
-** This is the GUI.pde file.                                                                **
+** This is the GUI.pde file.                                                                        **
 **                                                                                                  **
 ** This will open a window box that has total of 4 input boxes, texts, a timer for 6 minutes,       **
 ** and 4 buttons.                                                                                   **
@@ -13,7 +13,7 @@
 **                                                                                                  **
 ** Last the button are self-explanatory what they do.                                               **
 **                                                                                                  **
-** Author: Kenneth Kang and Liam Duncan                                                             **
+** Author: Kenneth Kang                                                                             **
 **                                                                                                  **
 ******************************************************************************************************/
 
