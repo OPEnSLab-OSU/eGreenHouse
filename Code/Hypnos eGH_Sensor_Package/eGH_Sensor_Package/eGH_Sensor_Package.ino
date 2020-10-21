@@ -6,6 +6,9 @@
 // then log that data values into SD, and send the data value
 // to the Hub over LoRa(Radio Communicator).
 //
+// This version of code is designed for the Hypnos Board. 
+// If you are not using a Hypnos Board, then please use the other code.
+//
 // CO2 Sensor: K30 
 // Luminosity Sensor(Light Sensor): TSL2591
 // Temperature & Relative Humidity Sensor: SHT31-D 
@@ -25,10 +28,6 @@
 // L. Location in mm
 //
 // Author: Kenneth Kang
-//
-//
-// Somehow the code sometimes doesn't work properly, even though the code works completely fine. 
-// Therefore, you might want to complie the Basic Loom code before compling this code
 //
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
