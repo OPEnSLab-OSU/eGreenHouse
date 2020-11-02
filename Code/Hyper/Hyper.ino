@@ -71,8 +71,8 @@ void loop(){
     const JsonObject coordinates_json = Loom.internal_json(false);                                             // Open the JSON from the code
     const JsonArray contents = coordinates_json["contents"];                                                   // For simple name for later usage
     const char* checker = coordinates_json["id"]["name"];                                                      // Update the checker value to make sure if board got the correct package
-    if (strcmp(checker, "Hub_Tranmit") == 0){                                                                  // Check if the board got the right JSON, if not, then it will move the else statement
-    LPrintln("Got the user input Coordinate values");                                                          // Tell the user that we got the correct JSON
+    if (strcmp(checker, "Hub") == 0){                                                                  // Check if the board got the right JSON, if not, then it will move the else statement
+    LPrintln("[LoRa] Got the user input Coordinate values");                                                          // Tell the user that we got the correct JSON
     
     Location = contents[0]["data"]["MM"];                                                                      // Get the Location from JSON
     MaxSpeed = contents[1]["data"]["Velocity"];                                                                // Get the MaxSpeed from JSON

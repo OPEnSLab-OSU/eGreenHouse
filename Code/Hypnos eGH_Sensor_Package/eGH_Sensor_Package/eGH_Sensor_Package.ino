@@ -114,6 +114,7 @@ void loop() {                                                                   
         Loom.display_data();                                                         // Display printed JSON formatted data on serial monitor
         Loom.SDCARD().log();                                                         // Log the data values (packages) into the file from SD Card
 
+        Loom.pause(10000);                                                            // Wait for 3 seconds
         Loom.LoRa().send(3);                                                         // Send back to the Hub
       }
       else{

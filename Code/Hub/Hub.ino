@@ -54,13 +54,14 @@ void setup() {                                                                  
 void loop() {                                                                     // Put your main code here, to run repeatedly:
 
   if(Processing == true){                                                         // If it is waiting for a response, it will run this pass this if statement
-    while(Loom.LoRa().receive_blocking(30000)){                                   // While the board waits maxium 30 seconds for response of package
+    while(Loom.LoRa().receive_blocking(5000)){                                    // While the board waits maxium 5 seconds for response of package
       if(Serial.available()){                                                     // However, if user press another request, then this will pop up
         LPrintln("Please wait until it uploads data to GoogleSheets");
       }
    const JsonObject complete_json = Loom.internal_json(false);                    // Get the full JSON
    const char* checker = complete_json["id"]["name"];                             // Initialize checker value if the board got the right package
       if(strcmp(checker, "eGH_Package") == 0){                                    // If the JSON package is correct, then it will run this if statement
+        LPrintln("Publshing");                                                    // Letting the user know that the data is publishing
         Loom.GoogleSheets().publish();                                            // Publish the JSON to GoogleSheets
         Processing = false;                                                       // Change back for waiting new response
         LPrintln("Ready");                                                        // Let the user know that the board is ready for new input

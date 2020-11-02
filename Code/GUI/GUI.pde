@@ -35,7 +35,7 @@ Arduino arduino;
 /****************************************
 *****Declare variable for functions******
 ****************************************/
-String port = "COM20";
+String port = "COM11";
 
 
 String GoTo = "0"; 
